@@ -8,7 +8,9 @@ const userSchema = new mongoose.Schema({
   },
   name: String,
   passwordHash: String,
+  watchlist: [{ tv_id: Number, season_number: Number, episode_number: Number }],
 })
+
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     ;(returnedObject.id = returnedObject._id.toString()),

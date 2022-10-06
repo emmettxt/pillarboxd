@@ -7,3 +7,6 @@ content-type: application/json
   "username":"root",
   "name":"Emmet"
 }
+
+###
+GET http://localhost:3000/users

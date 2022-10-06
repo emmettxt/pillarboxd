@@ -4,7 +4,7 @@ const app = require('../app')
 const api = supertest(app)
 const User = require('../models/user')
 // const helper = require('./test_helper')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 //set DB to have exactly one user
 beforeEach(async () => {

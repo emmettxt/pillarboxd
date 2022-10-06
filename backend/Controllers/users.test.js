@@ -4,7 +4,7 @@ const app = require('../app')
 const api = supertest(app)
 const User = require('../models/user')
 // const helper = require('./test_helper')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 //set DB to have exactly one user
 beforeEach(async () => {
@@ -14,7 +14,7 @@ beforeEach(async () => {
   await user.save()
 })
 
-describe('there is one user in the DB', () => {
+describe.only('there is one user in the DB', () => {
   describe('getting users works', () => {
     test('getting all users works', async () => {
       const response = await api.get('/users').expect(200)
