@@ -2,7 +2,9 @@
 /node_modules
 # testing
 /coverage
-/requests
+
+# production
+/build
 
 # envirmoent variables
 .env
