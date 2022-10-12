@@ -3,10 +3,10 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const cors = require('cors')
-const loginRouter = require('./Controllers/login')
+const loginRouter = require('./controllers/login')
 const middleware = require('./utils/middleware')
-const userRouter = require('./Controllers/users')
-const tmdbProxyRouter = require('./Controllers/tmdbProxy')
+const userRouter = require('./controllers/users')
+const tmdbProxyRouter = require('./controllers/tmdbProxy')
 
 mongoose.connect(config.MONGODB_URI)
 
@@ -17,9 +17,9 @@ app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
 app.use(middleware.userExtractor)
 
-app.use('/login',loginRouter)
-app.use('/users',userRouter)
-app.use('/tmdb',tmdbProxyRouter)
+app.use('/api/login',loginRouter)
+app.use('/api/users',userRouter)
+app.use('/api/tmdb',tmdbProxyRouter)
 
 
 // if (process.env.NODE_ENV === 'test') {
