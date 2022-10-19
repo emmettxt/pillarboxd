@@ -1,16 +1,29 @@
 import Navigation from './components/Navigation'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import SearchResults from './components/SearchResults'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { initializeUser } from './reducers/userReducer'
+import { ThemeProvider } from '@mui/material/styles'
+import linkTheme from './themes/linkTheme'
+import TvPage from './components/TvPage'
 
 function App() {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(initializeUser())
+  }, [])
   return (
-    <Router>
-      <Navigation />
-      <Routes>
-        <Route path="/"></Route>
-        <Route path="/search/:query" element={<SearchResults />}></Route>
-      </Routes>
-    </Router>
+    <ThemeProvider theme={linkTheme}>
+      <Router>
+        <Navigation />
+        <Routes>
+          <Route path="/"></Route>
+          <Route path="/search/:query" element={<SearchResults />}></Route>
+          <Route path="/tv/:id" element={<TvPage />}></Route>
+        </Routes>
+      </Router>
+    </ThemeProvider>
   )
 }
 

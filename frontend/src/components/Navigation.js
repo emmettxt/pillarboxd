@@ -1,9 +1,10 @@
 // import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-// import Login from './Login'
+import Login from './Login'
 import {
   AppBar,
   Box,
+  Link,
   // IconButton,
   Toolbar,
   Typography,
@@ -12,6 +13,9 @@ import {
 import { styled, alpha } from '@mui/material/styles'
 // import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
+import { useDispatch, useSelector } from 'react-redux'
+import { Button } from '@mui/material'
+import { logoutUser } from '../reducers/userReducer'
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -55,33 +59,27 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }))
 const Navigation = () => {
-  // const [searchInput, setSearchInput] = useState('')
-  // setSearchInput('')
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleSearch = (event) => {
     event.preventDefault()
-    navigate(`/search/${event.target.search.value}`)
+    navigate(`/search/${encodeURIComponent(event.target.search.value)}`)
   }
+  const user = useSelector((state) => state.user)
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar>
-          {/* <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton> */}
-          <Typography
+          <Link
+            href="/"
             variant="h6"
-            component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
+            underline="none"
+            color="inherit"
           >
             Pillarboxd
-          </Typography>
+          </Link>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -93,21 +91,24 @@ const Navigation = () => {
               />
             </form>
           </Search>
+          {user ? (
+            // <div style={{ display: 'flex' }}>
+            <Typography component="div" variant="subtitle1">
+              {user.username} logged in
+              <Button
+                variant="contained"
+                onClick={() => dispatch(logoutUser())}
+              >
+                log out
+              </Button>
+            </Typography>
+          ) : (
+            // </div>
+            <Login />
+          )}
         </Toolbar>
       </AppBar>
-      {/* <AppBar position="static"></AppBar> */}
     </Box>
-    // <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-    //   <Link to="/">home</Link>
-    //   <form onSubmit={handleSearch}>
-    //     Search
-    //     <input
-    //       name="search"
-    //       onChange={() => setSearchInput(searchInput)}
-    //     ></input>
-    //   </form>
-    //   <Login />
-    // </div>
   )
 }
 

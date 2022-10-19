@@ -22,6 +22,7 @@ module.exports = {
     'react/prop-types': 0,
     'react/react-in-jsx-scope': 'off',
     'no-warning-comments': 'warn',
+    'no-unused-vars':'warn'
   },
   settings: {
     react: {
