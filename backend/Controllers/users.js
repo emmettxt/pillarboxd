@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs')
 const tmdbUtil = require('../utils/tmdb')
 const axios = require('axios')
 const { TMDB_API_KEY_V3 } = require('../utils/config')
+// const { default: cryptoRandomString } = require('crypto-random-string')
+// const ValidationString = require('../models/validationString')
 
 userRouter.get('/', async (request, response) => {
   const users = await User.find({})
@@ -16,7 +18,7 @@ userRouter.get('/:id', async (request, response) => {
 })
 
 userRouter.post('/', async (request, response) => {
-  const { username, name, password } = request.body
+  const { username, name, password, email } = request.body
   const existingUser = await User.findOne({ username: username })
   if (existingUser) {
     return response.status(400).json({ error: 'username must be unique' })
@@ -35,12 +37,15 @@ userRouter.post('/', async (request, response) => {
   const passwordHash = await bcrypt.hash(password, saltRounds)
 
   const user = new User({
-    username: username,
-    name: name,
+    username,
+    name,
+    email,
     passwordHash: passwordHash,
+    active: true,
   })
   try {
     const savedUser = await user.save()
+    // await generateValidationEmail(savedUser)
     response.status(200).json(savedUser)
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -48,10 +53,21 @@ userRouter.post('/', async (request, response) => {
     }
   }
 })
+// const generateValidationEmail = async (savedUser) => {
+//   const randomString = cryptoRandomString({ length: 128, type: 'url-safe' })
+//   const validationString = new ValidationString({
+//     user: savedUser.id,
+//     string: randomString,
+//   })
+//   await validationString.save()
+// }
 
 //this route is for adding an entire show to a users watchlist
 userRouter.post('/:userId/watchlist/:tv_id', async (request, response) => {
   const { userId, tv_id } = request.params
+  if (request.user.id !== userId) {
+    return response.sendStatus(401)
+  }
   let user
   try {
     user = await User.findByIdAndUpdate(
@@ -85,9 +101,16 @@ userRouter.post('/:userId/watchlist/:tv_id', async (request, response) => {
 userRouter.delete('/:userId/watchlist/:tv_id', async (request, response) => {
   const userId = request.params.userId
   const tv_id = request.params.tv_id
-  await User.findByIdAndUpdate(userId, {
-    $pull: { watchList: { id: tv_id } },
-  })
+  if (!request.user || request.user.id !== userId) {
+    return response.sendStatus(200)
+  }
+  await User.findByIdAndUpdate(
+    userId,
+    {
+      $pull: { watchlist: { tv_id } },
+    },
+    { new: true }
+  )
   response.sendStatus(200)
 })
 
@@ -96,6 +119,9 @@ userRouter.post(
   '/:userId/watchlist/:tv_id/season/:season_number',
   async (request, response) => {
     const { userId, tv_id, season_number } = request.params
+    if (request.user.id !== userId) {
+      return response.sendStatus(401)
+    }
     const user = await User.findByIdAndUpdate(
       userId,
       {
@@ -132,6 +158,9 @@ userRouter.delete(
   '/:userId/watchlist/:tv_id/season/:season_number',
   async (request, response) => {
     const { userId, tv_id, season_number } = request.params
+    if (request.user.id !== userId) {
+      return response.sendStatus(401)
+    }
     await User.findByIdAndUpdate(userId, {
       $pull: {
         watchlist: {
@@ -148,22 +177,25 @@ userRouter.post(
   '/:userId/watchlist/:tv_id/season/:season_number/episode/:episode_number',
   async (request, response) => {
     const { userId, tv_id, season_number, episode_number } = request.params
-    const user = await User.findById(userId)
+    if (request.user.id !== userId) {
+      return response.sendStatus(401)
+    }
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        $pull: {
+          watchlist: {
+            tv_id,
+            season_number,
+            episode_number,
+          },
+        },
+      },
+      { new: true }
+    )
     if (!user) {
       return response.sendStatus(404)
     }
-    //if already exists return user
-    if (
-      user.watchlist.find(
-        (watchlisttItem) =>
-          watchlisttItem.tv_id === tv_id &&
-          watchlisttItem.season_number === season_number &&
-          watchlisttItem.episode_number === episode_number
-      )
-    ) {
-      return response.json(user)
-    }
-    //try get the episode from tmdb to check it is valid
     try {
       await axios.get(
         `https://api.themoviedb.org/3/tv/${tv_id}/season/${season_number}/episode/${episode_number}?api_key=${TMDB_API_KEY_V3}`
@@ -184,6 +216,9 @@ userRouter.delete(
   '/:userId/watchlist/:tv_id/season/:season_number/episode/:episode_number',
   async (request, response) => {
     const { userId, tv_id, season_number, episode_number } = request.params
+    if (request.user.id !== userId) {
+      return response.sendStatus(401)
+    }
     await User.findByIdAndUpdate(userId, {
       $pull: {
         watchlist: {

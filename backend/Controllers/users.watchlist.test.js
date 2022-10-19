@@ -8,6 +8,7 @@ const {
   initialUser,
   nonExisitingUserId,
   getTestUser,
+  getValidTokenForUser,
 } = require('./users.watchlis.testHelper')
 const tmdbUtil = require('../utils/tmdb')
 //set DB to have exactly one user with single watchlist item with firs two episodes of season 1
@@ -18,6 +19,7 @@ beforeEach(async () => {
 describe('user has watchlist with one show', () => {
   describe('adding an entire show', () => {
     test('show not already in watchlist works', async () => {
+      const token = await getValidTokenForUser(await getTestUser())
       const toAdd = await initialUser.watchlist[0]
       //clear show from watchlist
       await User.findOneAndUpdate(
@@ -32,8 +34,9 @@ describe('user has watchlist with one show', () => {
       )
       const userBefore = await getTestUser()
       await api
-        .post(`/users/${userBefore.id}/watchlist/${toAdd.tv_id}`)
+        .post(`/api/users/${userBefore.id}/watchlist/${toAdd.tv_id}`)
         .send()
+        .set('Authorization', `bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
       const userAfter = await getTestUser()
@@ -45,9 +48,12 @@ describe('user has watchlist with one show', () => {
     test('show already in watchlist works', async () => {
       const toAdd = await initialUser.watchlist[0]
       const userBefore = await getTestUser()
+      const token = await getValidTokenForUser(userBefore)
+
       await api
-        .post(`/users/${userBefore.id}/watchlist/${toAdd.tv_id}`)
+        .post(`/api/users/${userBefore.id}/watchlist/${toAdd.tv_id}`)
         .send()
+        .set('Authorization', `bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
 
@@ -70,39 +76,56 @@ describe('user has watchlist with one show', () => {
     })
     test('invalid tvId id', async () => {
       const user = await getTestUser()
+      const token = await getValidTokenForUser(user)
 
       await api
-        .post(`/users/${user.id}/watchlist/${'thiswillbreak'}`)
+        .post(`/api/users/${user.id}/watchlist/${'thiswillbreak'}`)
         .send()
+        .set('Authorization', `bearer ${token}`)
         .expect(404)
     })
   })
-  describe('deleting an entire show', () => {
+  describe.only('deleting an entire show', () => {
     test('show that exists is removed', async () => {
       const userBeforeDelete = await getTestUser()
+      const token = await getValidTokenForUser(userBeforeDelete)
+
+      const tv_idToDelete = userBeforeDelete.watchlist[0].tv_id
       await api
-        .delete(
-          `/users/${userBeforeDelete.id}/watchlist/${userBeforeDelete.watchList[0].tv_id}`
-        )
+        .delete(`/api/users/${userBeforeDelete.id}/watchlist/${tv_idToDelete}`)
+        .set('Authorization', `bearer ${token}`)
         .expect(200)
 
       const userAfterDelete = await getTestUser()
-      expect(userAfterDelete.watchList).toHaveLength(
-        userBeforeDelete.watchList.length - 1
+      expect(userAfterDelete.watchlist).toHaveLength(
+        userBeforeDelete.watchlist.filter(
+          (item) => item.tv_id !== tv_idToDelete
+        ).length
       )
     })
     test('show that does not exist causes no error', async () => {
       const userBeforeDelete = await getTestUser()
+      const token = await getValidTokenForUser(userBeforeDelete)
+
       await api
-        .delete(`/users/${userBeforeDelete.id}/watchlist/456`)
+        .delete(`/api/users/${userBeforeDelete.id}/watchlist/456`)
+        .set('Authorization', `bearer ${token}`)
         .expect(200)
 
       const userAfterDelete = await getTestUser()
-      expect(userAfterDelete.watchList).toEqual(userBeforeDelete.watchList)
+      expect(userAfterDelete.watchlist).toEqual(userBeforeDelete.watchlist)
     })
-    test('bad user id causes no error', async () => {
+    test.only('bad user id causes no error', async () => {
       const badUserId = await nonExisitingUserId()
-      await api.delete(`/users/${badUserId}/watchlist/456`).expect(200)
+      const token = await getValidTokenForUser({
+        id: badUserId,
+        username: 'none',
+      })
+
+      await api
+        .delete(`/api/users/${badUserId}/watchlist/456`)
+        .set('Authorization', `bearer ${token}`)
+        .expect(200)
     })
   })
   describe('adding a season', () => {
@@ -114,7 +137,7 @@ describe('user has watchlist with one show', () => {
         //do api call
         await api
           .post(
-            `/users/${userBefore.id}/watchlist/${toAdd.tv_id}/season/${toAdd.season_number}`
+            `/api/users/${userBefore.id}/watchlist/${toAdd.tv_id}/season/${toAdd.season_number}`
           )
           .send()
           .expect(200)
@@ -163,7 +186,7 @@ describe('user has watchlist with one show', () => {
         //do api call
         await api
           .post(
-            `/users/${userBefore.id}/watchlist/${toAdd.tv_id}/season/${toAdd.season_number}`
+            `/api/users/${userBefore.id}/watchlist/${toAdd.tv_id}/season/${toAdd.season_number}`
           )
           .send()
           .expect(200)
@@ -206,7 +229,7 @@ describe('user has watchlist with one show', () => {
       //do api call
       await api
         .post(
-          `/users/${userBefore.id}/watchlist/${toAdd.tv_id}/season/${toAdd.season_number}`
+          `/api/users/${userBefore.id}/watchlist/${toAdd.tv_id}/season/${toAdd.season_number}`
         )
         .send()
         .expect(200)
@@ -257,7 +280,7 @@ describe('user has watchlist with one show', () => {
       const toDelete = userBefore.watchlist[0]
       await api
         .delete(
-          `/users/${userBefore.id}/watchlist/${toDelete.tv_id}/season/${toDelete.season_number}`
+          `/api/users/${userBefore.id}/watchlist/${toDelete.tv_id}/season/${toDelete.season_number}`
         )
         .expect(200)
 
@@ -265,8 +288,10 @@ describe('user has watchlist with one show', () => {
       expect(userAfterDelete.watchlist).toHaveLength(
         userBefore.watchlist.filter(
           (w) =>
-            w.tv_id !== toDelete.tv_id &&
-            w.season_number !== toDelete.season_number
+            !(
+              w.tv_id === toDelete.tv_id &&
+              w.season_number === toDelete.season_number
+            )
         ).length
       )
     })
@@ -277,7 +302,7 @@ describe('user has watchlist with one show', () => {
       const toDelete = userBefore.watchlist[0]
       await api
         .delete(
-          `/users/${userBefore.id}/watchlist/${toDelete.tv_id}/season/${toDelete.season_number}/episode/${toDelete.episode_number}`
+          `/api/users/${userBefore.id}/watchlist/${toDelete.tv_id}/season/${toDelete.season_number}/episode/${toDelete.episode_number}`
         )
         .expect(200)
 
@@ -294,7 +319,7 @@ describe('user has watchlist with one show', () => {
       const toAdd = userBefore.watchlist[0]
       await api
         .post(
-          `/users/${userBefore.id}/watchlist/${toAdd.tv_id}/season/${toAdd.season_number}/episode/${toAdd.episode_number}`
+          `/api/users/${userBefore.id}/watchlist/${toAdd.tv_id}/season/${toAdd.season_number}/episode/${toAdd.episode_number}`
         )
         .expect(200)
         .expect('Content-Type', /application\/json/)
@@ -323,7 +348,7 @@ describe('user has watchlist with one show', () => {
       const userBefore = await getTestUser()
       await api
         .post(
-          `/users/${userBefore.id}/watchlist/${toAdd.tv_id}/season/${toAdd.season_number}/episode/${toAdd.episode_number}`
+          `/api/users/${userBefore.id}/watchlist/${toAdd.tv_id}/season/${toAdd.season_number}/episode/${toAdd.episode_number}`
         )
         .expect(200)
         .expect('Content-Type', /application\/json/)
