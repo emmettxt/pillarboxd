@@ -23,6 +23,10 @@ userRouter.post('/', async (request, response) => {
   if (existingUser) {
     return response.status(400).json({ error: 'username must be unique' })
   }
+  const existingUserEmail = await User.findOne({ email })
+  if (existingUserEmail) {
+    return response.status(400).json({ error: 'email must be unique' })
+  }
   if (!password) {
     return response
       .status(400)
@@ -49,7 +53,9 @@ userRouter.post('/', async (request, response) => {
     response.status(200).json(savedUser)
   } catch (error) {
     if (error.name === 'ValidationError') {
-      response.status(400).send({ error: error.message })
+      response.status(400).json({ error: error.message })
+    } else {
+      console.log(error.message)
     }
   }
 })

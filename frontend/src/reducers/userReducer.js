@@ -27,18 +27,18 @@ export const initializeUser = () => {
 }
 export const loginUser = (credentials) => {
   return async (dispatch) => {
-    try {
+    // try {
       const user = await loginService.login(credentials)
       console.log('logged in user:', user)
       window.localStorage.setItem('loggedInPillarboxdUser', JSON.stringify(user))
       dispatch(setUser(user))
-    } catch (error) {
-      dispatch(
-        console.log(
-          'There was an error logging in, ' + error.response.data.error
-        )
-      )
-    }
+    // } catch (error) {
+    //   dispatch(
+    //     console.log(
+    //       'There was an error logging in, ' + error.response.data.error
+    //     )
+    //   )
+    // }
   }
 }
 export const logoutUser = () => {

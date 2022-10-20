@@ -7,6 +7,7 @@ import { initializeUser } from './reducers/userReducer'
 import { ThemeProvider } from '@mui/material/styles'
 import linkTheme from './themes/linkTheme'
 import TvPage from './components/TvPage'
+import Alerts from './components/Alerts'
 
 function App() {
   const dispatch = useDispatch()
@@ -17,6 +18,7 @@ function App() {
     <ThemeProvider theme={linkTheme}>
       <Router>
         <Navigation />
+        <Alerts/>
         <Routes>
           <Route path="/"></Route>
           <Route path="/search/:query" element={<SearchResults />}></Route>
