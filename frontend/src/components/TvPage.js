@@ -97,7 +97,7 @@ const TvPage = () => {
           {tv.seasons.map(
             (season) => (
               <SeasonAccordion
-                tvId={tvId}
+                tvId={tv.id}
                 seasonNumber={season.season_number}
                 key={season.id}
               />

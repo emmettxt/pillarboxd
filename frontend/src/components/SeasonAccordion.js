@@ -4,11 +4,17 @@ import {
   AccordionSummary,
   Avatar,
   Typography,
+  Button,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import tvService from '../services/tv'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box } from '@mui/system'
+import { useDispatch, useSelector } from 'react-redux'
+import MoreTimeIcon from '@mui/icons-material/MoreTime'
+import watchlistService from '../services/watchlist'
+import { setUser } from '../reducers/userReducer'
+
 const formatEpisodeDate = (dateAsString) => {
   const date = new Date(dateAsString)
   if (!dateAsString || date.toString === 'Invalid Date') {
@@ -22,37 +28,86 @@ const formatEpisodeDate = (dateAsString) => {
   }
   return date.toLocaleDateString(undefined, options)
 }
-const EpisodeAccordion = ({ tvId, seasonNumber, episode }) => (
-  <Accordion
-    key={`${tvId}.${seasonNumber}.${episode.episode_number}`}
-    sx={{ background: 'rgba(255,255,255,0.7)' }}
-  >
-    <AccordionSummary
-      expandIcon={<ExpandMoreIcon />}
-      aria-controls="panel1a-content"
-      id="panel1a-header"
+const EpisodeAccordion = ({ tvId, seasonNumber, episode }) => {
+  const user = useSelector((state) => state.user)
+
+  const isEpisodeInWatchlist =
+    user &&
+    user.watchlist.filter(
+      (w) =>
+        w.tv_id === tvId &&
+        w.season_number === seasonNumber &&
+        w.episode_number === episode.episode_number
+    ).length > 0
+  const dispatch = useDispatch()
+  const handleWatchlist = async (event) => {
+    event.stopPropagation()
+
+    if (isEpisodeInWatchlist) {
+      await watchlistService.removeEpisodeFromWatchList(
+        user,
+        tvId,
+        seasonNumber,
+        episode.episode_number
+      )
+      const updatedWatchlist = user.watchlist.filter(
+        (w) =>
+          w.tv_id !== tvId ||
+          w.season_number !== seasonNumber ||
+          w.episode_number !== episode.episode_number
+      )
+      await dispatch(setUser({ ...user, watchlist: updatedWatchlist }))
+    } else {
+      const updatedUser = await watchlistService.addEpidsodeToWatchList(
+        user,
+        tvId,
+        seasonNumber,
+        episode.episode_number
+      )
+      await dispatch(setUser({ ...user, watchlist: updatedUser.watchlist }))
+    }
+  }
+  return (
+    <Accordion
+      key={`${tvId}.${seasonNumber}.${episode.episode_number}`}
+      sx={{ background: 'rgba(255,255,255,0.7)' }}
     >
-      <Typography varient="subtitle1">{`${episode.episode_number}: ${episode.name}`}</Typography>
-      <Typography
-        variant="subtitle2"
-        sx={{ marginLeft: 'auto', textAlign: 'end' }}
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
       >
-        {formatEpisodeDate(episode.air_date)}
-      </Typography>
-    </AccordionSummary>
-    <AccordionDetails>
-      <Box sx={{ display: 'flex', flexWrap: { xs: 'wrap', sm: 'nowrap' } }}>
-        <Avatar
-          alt={episode.name}
-          src={`https://image.tmdb.org/t/p/w300${episode.still_path}`}
-          sx={{ width: 150, height: 84 }}
-          variant="rounded"
-        />
-        <Typography sx={{ flexShrink: 2 }}>{episode.overview}</Typography>
-      </Box>
-    </AccordionDetails>
-  </Accordion>
-)
+        {/* <Button onClick={handleWatchlist}> */}
+        <MoreTimeIcon
+          onClick={handleWatchlist}
+          color={isEpisodeInWatchlist ? 'success' : 'primary'}
+          sx={{paddingRight:"5px"}}
+        ></MoreTimeIcon>
+        {/* </Button> */}
+        <Typography varient="subtitle1">
+          {`${episode.episode_number}: ${episode.name}`}{' '}
+        </Typography>
+        <Typography
+          variant="subtitle2"
+          sx={{ marginLeft: 'auto', textAlign: 'end' }}
+        >
+          {formatEpisodeDate(episode.air_date)}
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Box sx={{ display: 'flex', flexWrap: { xs: 'wrap', sm: 'nowrap' } }}>
+          <Avatar
+            alt={episode.name}
+            src={`https://image.tmdb.org/t/p/w300${episode.still_path}`}
+            sx={{ width: 150, height: 84 }}
+            variant="rounded"
+          />
+          <Typography sx={{ flexShrink: 2 }}>{episode.overview}</Typography>
+        </Box>
+      </AccordionDetails>
+    </Accordion>
+  )
+}
 
 const SeasonAccordion = ({ tvId, seasonNumber }) => {
   const [season, setSeason] = useState({ episodes: [] })
@@ -63,6 +118,32 @@ const SeasonAccordion = ({ tvId, seasonNumber }) => {
         setSeason({ ...season, episodes: season.episodes.reverse() })
       )
   }, [])
+  const user = useSelector((s) => s.user)
+  const isSeasonInWatchList =
+    user &&
+    season &&
+    season.episodes.length ===
+      user.watchlist.filter(
+        (w) => w.tv_id === tvId && w.season_number === seasonNumber
+      ).length
+  const dispatch = useDispatch()
+  const handleWatchlist = async (event) => {
+    event.stopPropagation()
+    if (isSeasonInWatchList) {
+      await watchlistService.removeSeasonFromWatchList(user, tvId, seasonNumber)
+      const updatedWatchlist = user.watchlist.filter(
+        (w) => !(w.tv_id === tvId && w.season_number === seasonNumber)
+      )
+      await dispatch(setUser({ ...user, watchlist: updatedWatchlist }))
+    } else {
+      const updatedUser = await watchlistService.addSeasonToWatchList(
+        user,
+        tvId,
+        seasonNumber
+      )
+      await dispatch(setUser({ ...updatedUser, token: user.token }))
+    }
+  }
   return season ? (
     <Accordion key={season.id}>
       <AccordionSummary
@@ -70,7 +151,14 @@ const SeasonAccordion = ({ tvId, seasonNumber }) => {
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography>{season.name}</Typography>
+        <Typography>
+          {season.name}
+          <Button onClick={handleWatchlist}>
+            <MoreTimeIcon
+              color={isSeasonInWatchList ? 'success' : 'primary'}
+            ></MoreTimeIcon>
+          </Button>
+        </Typography>
       </AccordionSummary>
       <AccordionDetails
         sx={{
