@@ -13,7 +13,10 @@ import { Container } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import tmdbService from '../services/search'
-
+const firstAirDateYear = (firstAirDate) => {
+  if (!firstAirDate) return ''
+  return `(${firstAirDate.split('-')[0]})`
+}
 const SearchResult = ({ object }) => {
   const isTv = object.media_type === 'tv'
   const handleAddToWatchlist = async () => {
@@ -46,7 +49,7 @@ const SearchResult = ({ object }) => {
         <ListItemText
           primary={
             isTv
-              ? `${object.name} (${object.first_air_date.split('-')[0]})`
+              ? `${object.name} ${firstAirDateYear(object.first_air_date)}`
               : object.name
           }
           secondary={object.overview}
