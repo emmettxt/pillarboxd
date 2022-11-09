@@ -24,7 +24,10 @@ const TvPage = () => {
   useEffect(() => {
     tvService.getTv(tvId).then((tv) => {
       setTv({ ...tv, seasons: tv.seasons.reverse() })
-      // setIsEntireShowInUserWatchlist(checkEntireShowInUserWatchlist())
+      tvService.getTvWithAllSeasons(tv).then((tv) => {
+        setTv({ ...tv, seasons: tv.seasons.reverse() })
+        // setIsEntireShowInUserWatchlist(checkEntireShowInUserWatchlist())
+      })
     })
   }, [])
   //this will compare the shows episodes and the episodes in the users watchlist
@@ -100,6 +103,7 @@ const TvPage = () => {
                 tvId={tv.id}
                 seasonNumber={season.season_number}
                 key={season.id}
+                season={tv[`season/${season.season_number}`]}
               />
             )
             // <Accordion key={season.id}>

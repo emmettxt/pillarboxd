@@ -71,19 +71,18 @@ const EpisodeAccordion = ({ tvId, seasonNumber, episode }) => {
     <Accordion
       key={`${tvId}.${seasonNumber}.${episode.episode_number}`}
       sx={{ background: 'rgba(255,255,255,0.7)' }}
+      TransitionProps={{ unmountOnExit: true }}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        {/* <Button onClick={handleWatchlist}> */}
         <MoreTimeIcon
           onClick={handleWatchlist}
           color={isEpisodeInWatchlist ? 'success' : 'primary'}
-          sx={{paddingRight:"5px"}}
+          sx={{ paddingRight: '5px' }}
         ></MoreTimeIcon>
-        {/* </Button> */}
         <Typography varient="subtitle1">
           {`${episode.episode_number}: ${episode.name}`}{' '}
         </Typography>
@@ -96,12 +95,20 @@ const EpisodeAccordion = ({ tvId, seasonNumber, episode }) => {
       </AccordionSummary>
       <AccordionDetails>
         <Box sx={{ display: 'flex', flexWrap: { xs: 'wrap', sm: 'nowrap' } }}>
-          <Avatar
+          {/* <Avatar
             alt={episode.name}
             src={`https://image.tmdb.org/t/p/w300${episode.still_path}`}
-            sx={{ width: 150, height: 84 }}
+            sx={{ width: 150, height: 84, loading: 'lazy' }}
             variant="rounded"
-          />
+          /> */}
+          <img
+            width="150"
+            height="84"
+            loading="lazy"
+            src={`https://image.tmdb.org/t/p/w300${episode.still_path}`}
+            alt={episode.name}
+
+          ></img>
           <Typography sx={{ flexShrink: 2 }}>{episode.overview}</Typography>
         </Box>
       </AccordionDetails>
@@ -109,15 +116,15 @@ const EpisodeAccordion = ({ tvId, seasonNumber, episode }) => {
   )
 }
 
-const SeasonAccordion = ({ tvId, seasonNumber }) => {
-  const [season, setSeason] = useState({ episodes: [] })
-  useEffect(() => {
-    tvService
-      .getTvSeason(tvId, seasonNumber)
-      .then((season) =>
-        setSeason({ ...season, episodes: season.episodes.reverse() })
-      )
-  }, [])
+const SeasonAccordion = ({ tvId, seasonNumber, season }) => {
+  // const [season, setSeason] = useState({ episodes: [] })
+  // useEffect(() => {
+  //   tvService
+  //     .getTvSeason(tvId, seasonNumber)
+  //     .then((season) =>
+  //       setSeason({ ...season, episodes: season.episodes.reverse() })
+  //     )
+  // }, [])
   const user = useSelector((s) => s.user)
   const isSeasonInWatchList =
     user &&
