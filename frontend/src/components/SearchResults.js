@@ -29,23 +29,23 @@ const SearchResult = ({ object }) => {
       key={object.id}
       sx={{ flexWrap: { xs: 'wrap', sm: 'nowrap' } }}
     >
-      <ListItemAvatar>
-        <Avatar
-          alt={object.name}
-          src={
-            isTv
-              ? `https://image.tmdb.org/t/p/w185/${object.poster_path}`
-              : `https://image.tmdb.org/t/p/w185/${object.profile_path}`
-          }
-          variant="square"
-          sx={{ width: 100, height: 150, padding: 1, order: 0 }}
-        />
-      </ListItemAvatar>
       <ListItemButton
         component={Link}
         to={`/tv/${object.id}`}
         sx={{ order: { xs: 2, sm: 1 } }}
       >
+        <ListItemAvatar>
+          <Avatar
+            alt={object.name}
+            src={
+              isTv
+                ? `https://image.tmdb.org/t/p/w185/${object.poster_path}`
+                : `https://image.tmdb.org/t/p/w185/${object.profile_path}`
+            }
+            variant="square"
+            sx={{ width: 100, height: 150, padding: 1, order: 0 }}
+          />
+        </ListItemAvatar>
         <ListItemText
           primary={
             isTv
@@ -55,7 +55,7 @@ const SearchResult = ({ object }) => {
           secondary={object.overview}
         />
       </ListItemButton>
-      {isTv ? (
+      {/* {isTv ? (
         <Button
           onClick={handleAddToWatchlist}
           variant="contained"
@@ -63,7 +63,7 @@ const SearchResult = ({ object }) => {
         >
           add to watchlist
         </Button>
-      ) : null}
+      ) : null} */}
     </ListItem>
   )
 }
