@@ -24,5 +24,20 @@ const getTvWithAllSeasons = async (tv) => {
   }
   return Updatedtv
 }
-const tvService = { getTv, getTvSeason, getTvWithAllSeasons }
+
+const getPopularTv = async () => {
+  const response = await axios.get(`${baseUrl}/popular`)
+  return response.data.results
+}
+const getTrendingTv = async (timeWindow) => {
+  const response = await axios.get(`api/tmdb/trending/tv/${timeWindow}`)
+  return response.data.results
+}
+const tvService = {
+  getTv,
+  getTvSeason,
+  getTvWithAllSeasons,
+  getPopularTv,
+  getTrendingTv,
+}
 export default tvService
