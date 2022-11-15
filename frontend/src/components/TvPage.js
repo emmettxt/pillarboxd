@@ -70,19 +70,15 @@ const TvPage = () => {
     await dispatch(setUser(updatedUser))
   }
   return tv ? (
-    <Container>
+    <Container maxWidth="md">
       <Card>
-        <CardContent
+        <Box
+          style={{ backGroundSize: 'cover' }}
           sx={{
-            backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), white),url('https://image.tmdb.org/t/p/w1280/${tv.backdrop_path}')`,
-            backgroundRepeat: 'no-repeat',
-            backgroundPositionY: 0,
-            backgroundPositionX: '50%',
-            minHeight: { md: '450px', xs: '200px', sm: '300px' },
-            position: 'relative',
-            display: 'Block',
+            background: `linear-gradient(to bottom, rgba(0, 0, 0, 0), white),url('https://image.tmdb.org/t/p/w1280/${tv.backdrop_path}') center / contain no-repeat`,
+            paddingTop: '56.25%',
           }}
-        ></CardContent>
+        ></Box>
         <CardHeader title={tv.name} subheader={tv.tagline} />
         <CardContent>
           <Typography variant="body2" color="text.secondary">
