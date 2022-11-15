@@ -9,7 +9,7 @@ const tmdbProxyRouter = require('express').Router()
 const api_key = process.env.TMDB_API_KEY_V3
 const axios = require('axios')
 //regex to get all routes starting with "/"
-tmdbProxyRouter.get(/\/.+/, async (request, response) => {
+tmdbProxyRouter.get(/\/.+/, async (request, response, next) => {
   const urlParsed = url.parse(request.url, true)
   const params = new URLSearchParams({
     api_key,
@@ -22,10 +22,15 @@ tmdbProxyRouter.get(/\/.+/, async (request, response) => {
         params,
       }
     )
-    
+
     response.status(200).json(apiResponse.data)
   } catch (err) {
-    response.status(err.response.status).json(err.response.data)
+    if (err.name === 'AxiosError') {
+      console.log(err.response.status)
+      return response.status(err.response.status).json(err.response.data)
+    }
+      next(err)
+    
   }
 })
 
