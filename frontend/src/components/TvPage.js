@@ -56,9 +56,12 @@ const TvPage = () => {
   const isEntireShowInUserWatchlist = checkEntireShowInUserWatchlist()
   const dispatch = useDispatch()
   const handleAddShowToWatchlist = async () => {
-    const updatedUser = await watchlistService.addShowToWatchList(user, tv.id)
+    const updatedWatchlist = await watchlistService.addShowToWatchList(
+      user,
+      tv.id
+    )
 
-    await dispatch(setUser({ ...updatedUser, token: user.token }))
+    await dispatch(setUser({ ...user, watchlist: updatedWatchlist }))
   }
   const handleRemoveShowFromWatchlist = async () => {
     await watchlistService.removeShowFromWatchList(user, tv.id)
@@ -86,7 +89,7 @@ const TvPage = () => {
             {tv.overview}
           </Typography>
 
-          <Box sx={{display:'flex'}}>
+          <Box sx={{ display: 'flex' }}>
             <WatchedIconButton
               handleClick={
                 isEntireShowInUserWatchlist

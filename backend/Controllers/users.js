@@ -100,7 +100,7 @@ userRouter.post('/:userId/watchlist/:tv_id', async (request, response) => {
     return response.sendStatus(404)
   }
   await user.save()
-  response.json(user)
+  response.json(user.watchlist)
 })
 
 //this route is for removing a show from a users watchlist
@@ -155,7 +155,7 @@ userRouter.post(
     )
     user.watchlist = [...user.watchlist, ...seasonWatchList]
     await user.save()
-    response.json(user)
+    response.json(user.watchlist)
   }
 )
 

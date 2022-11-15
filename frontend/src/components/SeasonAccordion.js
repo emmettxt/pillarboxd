@@ -59,13 +59,13 @@ const EpisodeAccordion = ({ tvId, episode }) => {
       )
       await dispatch(setUser({ ...user, watchlist: updatedWatchlist }))
     } else {
-      const updatedUser = await watchlistService.addEpidsodeToWatchList(
+      const updatedWatchlist = await watchlistService.addEpidsodeToWatchList(
         user,
         tvId,
         episode.season_number,
         episode.episode_number
       )
-      await dispatch(setUser({ ...user, watchlist: updatedUser.watchlist }))
+      await dispatch(setUser({ ...user, watchlist: updatedWatchlist }))
     }
   }
   return (
@@ -180,12 +180,12 @@ const SeasonAccordion = ({ tvId, season }) => {
       await dispatch(setUser({ ...user, watchlist: updatedWatchlist }))
     } else {
       //adding to watchlist
-      const updatedUser = await watchlistService.addSeasonToWatchList(
+      const updatedWatchlist = await watchlistService.addSeasonToWatchList(
         user,
         tvId,
         season.season_number
       )
-      await dispatch(setUser({ ...updatedUser, token: user.token }))
+      await dispatch(setUser({ ...user, watchlist: updatedWatchlist }))
     }
   }
   return season ? (
