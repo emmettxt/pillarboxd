@@ -5,48 +5,52 @@ import {
   CardContent,
   CardHeader,
   Divider,
-  Button,
-  IconButton,
+  Box,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import tvService from '../services/tv'
 import SeasonAccordion from './SeasonAccordion'
-import MoreTimeIcon from '@mui/icons-material/MoreTime'
 import { useDispatch, useSelector } from 'react-redux'
 import watchlistService from '../services/watchlist'
 import { setUser } from '../reducers/userReducer'
-import axios from 'axios'
 import imdbService from '../services/imdb'
 import ImdbRating from './ImdbRating'
+import WatchedIconButton from './WatchedIconButton'
+//this component is the page for a specific tv show, it takes the tv id from the URL
 const TvPage = () => {
-  const user = useSelector((state) => state.user)
   const params = useParams()
   const tvId = params.id
+  //this hold the data pulled from the server for this show
   const [tv, setTv] = useState()
   const [imdbRating, setImdbRating] = useState()
+  //user data fro currently logged in user
+  const user = useSelector((state) => state.user)
   useEffect(() => {
+    //tv data with external id (imdb id used to get imdb rating)
     tvService.getTvWithExternalIds(tvId).then((tv) => {
       setTv({ ...tv, seasons: tv.seasons.reverse() })
       imdbService
         .getRating(tv.external_ids.imdb_id)
         .then((r) => setImdbRating(r['imdbRating']))
-      tvService.getTvWithAllSeasons(tv).then((tv) => {
-        setTv({ ...tv, seasons: tv.seasons.reverse() })
-      })
+      // tvService.getTvWithAllSeasons(tv).then((tv) => {
+      //   setTv({ ...tv, seasons: tv.seasons.reverse() })
+      // })
     })
   }, [])
   //this will compare the shows episodes and the episodes in the users watchlist
   const checkEntireShowInUserWatchlist = () => {
+    //if user not logged in
     if (!user || !tv) return false
+    //count of episodes in the show
     const episodeCount = tv.seasons
       .filter((s) => s.season_number !== 0)
       .reduce((a, b) => a + b.episode_count, 0)
-    console.log({ episodeCount })
+    if (episodeCount === 0) return false
+    // count of epsiodes in the users watchlist, each episode should be unique
     const episodeCountInWatchlist = user.watchlist.filter(
       (s) => s.season_number !== 0 && s.tv_id === tv.id
     ).length
-    console.log({ episodeCountInWatchlist })
     return episodeCount === episodeCountInWatchlist
   }
   const isEntireShowInUserWatchlist = checkEntireShowInUserWatchlist()
@@ -68,14 +72,9 @@ const TvPage = () => {
         <CardContent
           sx={{
             backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), white),url('https://image.tmdb.org/t/p/w1280/${tv.backdrop_path}')`,
-            // objectPosition: 'bottom',
-            // backgroundPosition: 'top',
             backgroundRepeat: 'no-repeat',
-            // paddingTop: 30,
             backgroundPositionY: 0,
             backgroundPositionX: '50%',
-
-            // zIndex: '-1',
             minHeight: { md: '450px', xs: '200px', sm: '300px' },
             position: 'relative',
             display: 'Block',
@@ -86,19 +85,23 @@ const TvPage = () => {
           <Typography variant="body2" color="text.secondary">
             {tv.overview}
           </Typography>
-          <IconButton
-            // <Button
-            onClick={
-              isEntireShowInUserWatchlist
-                ? handleRemoveShowFromWatchlist
-                : handleAddShowToWatchlist
-            }
-          >
-            <MoreTimeIcon
-              color={isEntireShowInUserWatchlist ? 'success' : 'primary'}
-            ></MoreTimeIcon>
-          </IconButton>
-          <ImdbRating rating={imdbRating} />
+
+          <Box sx={{display:'flex'}}>
+            <WatchedIconButton
+              handleClick={
+                isEntireShowInUserWatchlist
+                  ? handleRemoveShowFromWatchlist
+                  : handleAddShowToWatchlist
+              }
+              isInWatchlist={isEntireShowInUserWatchlist}
+            />
+            <Box sx={{ marginRight: 0, marginLeft: 'auto' }}>
+              <ImdbRating
+                rating={imdbRating}
+                imdbId={tv.external_ids.imdb_id}
+              />
+            </Box>
+          </Box>
         </CardContent>
         <Divider />
         <CardContent>
@@ -110,7 +113,7 @@ const TvPage = () => {
               tvId={tv.id}
               seasonNumber={season.season_number}
               key={season.id}
-              season={tv[`season/${season.season_number}`]}
+              season={season}
             />
           ))}
         </CardContent>

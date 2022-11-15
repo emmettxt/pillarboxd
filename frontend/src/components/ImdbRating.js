@@ -1,15 +1,21 @@
-import { Box, SvgIcon, Typography } from '@mui/material'
+import { Box, SvgIcon, Typography, IconButton } from '@mui/material'
 import { ReactComponent as ImdbStar } from '../assest/imdbStar.svg'
 import { ReactComponent as ImdbLogo } from '../assest/IMDB_Logo.svg'
 
-const ImdbRating = ({ rating }) => {
-  return rating?(
-    <Box sx={{display:'inline-flex'}}>
-      <SvgIcon component={ImdbLogo} inheritViewBox></SvgIcon>
-      <Typography>{rating}/10</Typography>
-      <SvgIcon component={ImdbStar}></SvgIcon>
-    </Box>
-  ):null
+const ImdbRating = ({ rating, imdbId }) => {
+  return rating ? (
+    <IconButton
+      href={imdbId ? `https://www.imdb.com/title/${imdbId}` : null}
+      LinkComponent={'a'}
+      target="_blank"
+    >
+      <Box sx={{ display: 'inline-flex' }}>
+        <SvgIcon component={ImdbLogo} inheritViewBox></SvgIcon>
+        <Typography>{rating}/10</Typography>
+        <SvgIcon component={ImdbStar}></SvgIcon>
+      </Box>
+    </IconButton>
+  ) : null
 }
 
 export default ImdbRating
