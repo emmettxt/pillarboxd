@@ -6,6 +6,7 @@ import {
   CardHeader,
   Divider,
   Button,
+  IconButton,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -15,18 +16,23 @@ import MoreTimeIcon from '@mui/icons-material/MoreTime'
 import { useDispatch, useSelector } from 'react-redux'
 import watchlistService from '../services/watchlist'
 import { setUser } from '../reducers/userReducer'
-
+import axios from 'axios'
+import imdbService from '../services/imdb'
+import ImdbRating from './ImdbRating'
 const TvPage = () => {
   const user = useSelector((state) => state.user)
   const params = useParams()
   const tvId = params.id
   const [tv, setTv] = useState()
+  const [imdbRating, setImdbRating] = useState()
   useEffect(() => {
-    tvService.getTv(tvId).then((tv) => {
+    tvService.getTvWithExternalIds(tvId).then((tv) => {
       setTv({ ...tv, seasons: tv.seasons.reverse() })
+      imdbService
+        .getRating(tv.external_ids.imdb_id)
+        .then((r) => setImdbRating(r['imdbRating']))
       tvService.getTvWithAllSeasons(tv).then((tv) => {
         setTv({ ...tv, seasons: tv.seasons.reverse() })
-        // setIsEntireShowInUserWatchlist(checkEntireShowInUserWatchlist())
       })
     })
   }, [])
@@ -80,7 +86,8 @@ const TvPage = () => {
           <Typography variant="body2" color="text.secondary">
             {tv.overview}
           </Typography>
-          <Button
+          <IconButton
+            // <Button
             onClick={
               isEntireShowInUserWatchlist
                 ? handleRemoveShowFromWatchlist
@@ -90,48 +97,22 @@ const TvPage = () => {
             <MoreTimeIcon
               color={isEntireShowInUserWatchlist ? 'success' : 'primary'}
             ></MoreTimeIcon>
-          </Button>
+          </IconButton>
+          <ImdbRating rating={imdbRating} />
         </CardContent>
         <Divider />
         <CardContent>
           <Typography variant="h6" color="text.primary">
             Episodes
           </Typography>
-          {tv.seasons.map(
-            (season) => (
-              <SeasonAccordion
-                tvId={tv.id}
-                seasonNumber={season.season_number}
-                key={season.id}
-                season={tv[`season/${season.season_number}`]}
-              />
-            )
-            // <Accordion key={season.id}>
-            //   <AccordionSummary
-            //     expandIcon={<ExpandMoreIcon />}
-            //     aria-controls="panel1a-content"
-            //     id="panel1a-header"
-            //   >
-            //     <Typography>{season.name}</Typography>
-            //   </AccordionSummary>
-            //   <AccordionDetails
-            //     sx={{
-            //       backgroundImage: `url(
-            //         https://image.tmdb.org/t/p/w780/${season.poster_path})`,
-            //       // minHeight: '500px',
-            //       backgroundRepeat: 'no-repeat',
-            //       backgroundPositionX: '50%',
-            //       backgroundPositionY: 0,
-            //       backgroundSize: 'cover',
-            //     }}
-            //   >
-            //     <SeasonAccordion
-            //       tvId={tv.id}
-            //       seasonNumber={season.season_number}
-            //     />
-            //   </AccordionDetails>
-            // </Accordion>
-          )}
+          {tv.seasons.map((season) => (
+            <SeasonAccordion
+              tvId={tv.id}
+              seasonNumber={season.season_number}
+              key={season.id}
+              season={tv[`season/${season.season_number}`]}
+            />
+          ))}
         </CardContent>
       </Card>
     </Container>

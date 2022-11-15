@@ -5,6 +5,10 @@ const getTv = async (id) => {
   const response = await axios.get(`${baseUrl}/${id}`)
   return response.data
 }
+const getTvWithExternalIds = async (id) => {
+  const response = await axios.get(`${baseUrl}/${id}?append_to_response=external_ids`)
+  return response.data
+}
 const getTvSeason = async (id, seasonNumber) => {
   const response = await axios.get(`${baseUrl}/${id}/season/${seasonNumber}`)
   return response.data
@@ -33,11 +37,17 @@ const getTrendingTv = async (timeWindow) => {
   const response = await axios.get(`api/tmdb/trending/tv/${timeWindow}`)
   return response.data.results
 }
+const getImdbId = async(tvId) =>{
+  const response = await axios.get(`${baseUrl}/${tvId}/external_ids`)
+  return response.data.imdb_id
+}
 const tvService = {
   getTv,
   getTvSeason,
   getTvWithAllSeasons,
   getPopularTv,
   getTrendingTv,
+  getImdbId,
+  getTvWithExternalIds,
 }
 export default tvService
