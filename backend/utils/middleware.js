@@ -33,4 +33,11 @@ const userExtractor = async (request, response, next) => {
   }
   next()
 }
-module.exports = { tokenExtractor, requestLogger, userExtractor }
+const errorHandler = (error, request, response, next) => {
+  if (error.name === 'AxiosError') {
+    return response.status(error.response.status).json(error.response.data)
+  } else {
+    next(error)
+  }
+}
+module.exports = { tokenExtractor, requestLogger, userExtractor, errorHandler }

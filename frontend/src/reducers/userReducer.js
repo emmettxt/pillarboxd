@@ -12,10 +12,14 @@ const userSlice = createSlice({
     clearUser() {
       return null
     },
+    setShow(state, action) {
+      const { tvId, updatedShow } = action.payload
+      state.shows[tvId] = updatedShow
+    },
   },
 })
 
-export const { setUser, clearUser } = userSlice.actions
+export const { setUser, clearUser, setShow } = userSlice.actions
 
 export const initializeUser = () => {
   return async (dispatch) => {

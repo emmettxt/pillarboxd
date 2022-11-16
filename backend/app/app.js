@@ -22,6 +22,7 @@ app.use('/api/login',loginRouter)
 app.use('/api/users',userRouter)
 app.use('/api/tmdb',tmdbProxyRouter)
 app.use('/api/imdb',imdbRouter)
+app.use(middleware.errorHandler)
 
 app.use('/*',express.static('build'))
 

@@ -10,8 +10,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box } from '@mui/system'
 import { useDispatch, useSelector } from 'react-redux'
 import watchlistService from '../services/watchlist'
-import { setUser } from '../reducers/userReducer'
+import { setShow, setUser } from '../reducers/userReducer'
 import WatchedIconButton from './WatchedIconButton'
+import userShowsService from '../services/userShows'
 
 //used for formating the episode release date
 const formatEpisodeDate = (dateAsString) => {
@@ -32,38 +33,40 @@ const EpisodeAccordion = ({ tvId, episode }) => {
 
   const isEpisodeInWatchlist =
     user &&
-    user.watchlist.filter(
+    user.shows[tvId] &&
+    user.shows[tvId].episodes.some(
       (w) =>
-        w.tv_id === tvId &&
         w.season_number === episode.season_number &&
         w.episode_number === episode.episode_number
-    ).length > 0
+    )
   const dispatch = useDispatch()
   const handleWatchlist = async (event) => {
     event.stopPropagation()
 
     if (isEpisodeInWatchlist) {
-      await watchlistService.removeEpisodeFromWatchList(
+      await userShowsService.removeEpisode(
         user,
         tvId,
         episode.season_number,
         episode.episode_number
       )
-      const updatedWatchlist = user.watchlist.filter(
-        (w) =>
-          w.tv_id !== tvId ||
-          w.season_number !== episode.season_number ||
-          w.episode_number !== episode.episode_number
-      )
-      await dispatch(setUser({ ...user, watchlist: updatedWatchlist }))
+      const updatedShow = {
+        ...user.shows[tvId],
+        episodes: user.shows[tvId].episodes.filter(
+          (e) =>
+            e.episode_number !== episode.episode_number ||
+            e.season_number !== episode.season_number
+        ),
+      }
+      dispatch(setShow({ tvId, updatedShow }))
     } else {
-      const updatedWatchlist = await watchlistService.addEpidsodeToWatchList(
+      const updatedShow = await userShowsService.addEpisode(
         user,
         tvId,
         episode.season_number,
         episode.episode_number
       )
-      await dispatch(setUser({ ...user, watchlist: updatedWatchlist }))
+      dispatch(setShow({ tvId, updatedShow }))
     }
   }
   return (
@@ -156,9 +159,10 @@ const SeasonAccordion = ({ tvId, season }) => {
     season.episode_count !== 0 &&
     user &&
     season &&
+    user.shows[tvId] &&
     season.episode_count ===
-      user.watchlist.filter(
-        (w) => w.tv_id === tvId && w.season_number === season.season_number
+      user.shows[tvId].episodes.filter(
+        (e) => e.season_number === season.season_number
       ).length
   const dispatch = useDispatch()
   //for adding or removing entire season from user's watchlist
@@ -167,23 +171,24 @@ const SeasonAccordion = ({ tvId, season }) => {
     event.stopPropagation()
     //removing from watchlist
     if (isSeasonInWatchList) {
-      await watchlistService.removeSeasonFromWatchList(
+      await userShowsService.removeSeasonEpisodes(
         user,
         tvId,
         season.season_number
       )
-      const updatedWatchlist = user.watchlist.filter(
-        (w) => !(w.tv_id === tvId && w.season_number === season.season_number)
+      const updatedEpisodes = user.shows[tvId].episodes.filter(
+        (e) => e.season_number !== season.season_number
       )
-      await dispatch(setUser({ ...user, watchlist: updatedWatchlist }))
+      const updatedShow = { ...user.shows[tvId], episodes: updatedEpisodes }
+      dispatch(setShow({ tvId, updatedShow }))
     } else {
       //adding to watchlist
-      const updatedWatchlist = await watchlistService.addSeasonToWatchList(
+      const updatedShow = await userShowsService.addSeasonEpisodes(
         user,
         tvId,
         season.season_number
       )
-      await dispatch(setUser({ ...user, watchlist: updatedWatchlist }))
+      dispatch(setShow({ tvId, updatedShow }))
     }
   }
   return season ? (

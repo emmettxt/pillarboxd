@@ -12,11 +12,11 @@ import { useParams } from 'react-router-dom'
 import tvService from '../services/tv'
 import SeasonAccordion from './SeasonAccordion'
 import { useDispatch, useSelector } from 'react-redux'
-import watchlistService from '../services/watchlist'
-import { setUser } from '../reducers/userReducer'
+import { setShow } from '../reducers/userReducer'
 import imdbService from '../services/imdb'
 import ImdbRating from './ImdbRating'
 import WatchedIconButton from './WatchedIconButton'
+import userShowsService from '../services/userShows'
 //this component is the page for a specific tv show, it takes the tv id from the URL
 const TvPage = () => {
   const params = useParams()
@@ -39,35 +39,29 @@ const TvPage = () => {
     })
   }, [])
   //this will compare the shows episodes and the episodes in the users watchlist
-  const checkEntireShowInUserWatchlist = () => {
-    //if user not logged in
+  const checkAllEpisodesInUsersShow = () => {
     if (!user || !tv) return false
-    //count of episodes in the show
     const episodeCount = tv.seasons
       .filter((s) => s.season_number !== 0)
       .reduce((a, b) => a + b.episode_count, 0)
     if (episodeCount === 0) return false
-    // count of epsiodes in the users watchlist, each episode should be unique
-    const episodeCountInWatchlist = user.watchlist.filter(
-      (s) => s.season_number !== 0 && s.tv_id === tv.id
+    if (!user.shows[tv.id]) return false
+    const episodeCountInUsersShows = user.shows[tv.id].episodes.filter(
+      (s) => s.season_number !== 0
     ).length
-    return episodeCount === episodeCountInWatchlist
+    console.log({ episodeCountInUsersShows, episodeCount })
+    return episodeCount === episodeCountInUsersShows
   }
-  const isEntireShowInUserWatchlist = checkEntireShowInUserWatchlist()
+  const isEntireShowInUserWatchlist = checkAllEpisodesInUsersShow()
   const dispatch = useDispatch()
   const handleAddShowToWatchlist = async () => {
-    const updatedWatchlist = await watchlistService.addShowToWatchList(
-      user,
-      tv.id
-    )
-
-    await dispatch(setUser({ ...user, watchlist: updatedWatchlist }))
+    const updatedShow = await userShowsService.addShowEpisodes(user, tv.id)
+    dispatch(setShow({ tvId, updatedShow }))
   }
   const handleRemoveShowFromWatchlist = async () => {
-    await watchlistService.removeShowFromWatchList(user, tv.id)
-    const updatedWatchlist = user.watchlist.filter((w) => w.tv_id !== tv.id)
-    const updatedUser = { ...user, watchlist: updatedWatchlist }
-    await dispatch(setUser(updatedUser))
+    await userShowsService.removeShowEpisodes(user, tv.id)
+    const updatedShow = { ...user.shows[tv.id], episodes: [] }
+    dispatch(setShow({ tvId, updatedShow }))
   }
   return tv ? (
     <Container maxWidth="md">

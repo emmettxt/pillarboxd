@@ -17,9 +17,11 @@ const mapSeasonsToWatchlist = (tv_id, seasons) =>
   )
 
 //this function will get an entire season of a show for a users watchlist
-const getSeasonWatchlist = async (tv_id, season_number ) => {
+const getSeasonWatchlist = async (tv_id, season_number) => {
   try {
-    const response = await axios.get(`${baseUrl}/tv/${tv_id}?api_key=${api_key}`)
+    const response = await axios.get(
+      `${baseUrl}/tv/${tv_id}?api_key=${api_key}`
+    )
     const season = response.data.seasons.find(
       (season) => season.season_number === season_number
     )
@@ -38,4 +40,45 @@ const getShowWatchlist = async (tvId) => {
   return mapSeasonsToWatchlist(tvId, response.data.seasons)
 }
 
-module.exports = { getShowWatchlist, getSeasonWatchlist }
+//this function maps a season from tmdb to its watchlist form
+const mapSeasonToEpisodes = (tv_id, season) =>
+  Array.from({ length: season.episode_count }, (_, i) => ({
+    season_number: season.season_number,
+    episode_number: i + 1,
+  }))
+const mapSeasonsToEpisodes = (tv_id, seasons) =>
+  seasons.reduce(
+    (arr, season) => arr.concat(mapSeasonToEpisodes(tv_id, season)),
+    []
+  )
+
+//this function will get an entire season of a show for a users watchlist
+const getSeasonEpisodes = async (tv_id, season_number) => {
+  try {
+    const response = await axios.get(
+      `${baseUrl}/tv/${tv_id}?api_key=${api_key}`
+    )
+    const season = response.data.seasons.find(
+      (season) => season.season_number === season_number
+    )
+    return mapSeasonToEpisodes(tv_id, season)
+  } catch (error) {
+    console.log('Axios Error: ', error.response)
+    console.log(`getSeasonWatchlist({${tv_id},${season_number}})`)
+    console.log(`types({${typeof tv_id},${typeof season_number}})`)
+    throw error
+  }
+}
+
+// this function will make the required calls to TMDB and return a object with an entire shows watchlist
+const getShowEpisodes = async (tvId) => {
+  const response = await axios.get(`${baseUrl}/tv/${tvId}?api_key=${api_key}`)
+  return mapSeasonsToEpisodes(tvId, response.data.seasons)
+}
+
+module.exports = {
+  getShowWatchlist,
+  getSeasonWatchlist,
+  getShowEpisodes,
+  getSeasonEpisodes,
+}
