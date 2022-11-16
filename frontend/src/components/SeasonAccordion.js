@@ -3,14 +3,12 @@ import {
   AccordionDetails,
   AccordionSummary,
   Typography,
-  Button,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import tvService from '../services/tv'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box } from '@mui/system'
 import { useDispatch, useSelector } from 'react-redux'
-import MoreTimeIcon from '@mui/icons-material/MoreTime'
 import watchlistService from '../services/watchlist'
 import { setUser } from '../reducers/userReducer'
 import WatchedIconButton from './WatchedIconButton'
