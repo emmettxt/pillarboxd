@@ -17,6 +17,7 @@ import imdbService from '../services/imdb'
 import ImdbRating from './ImdbRating'
 import WatchedIconButton from './WatchedIconButton'
 import userShowsService from '../services/userShows'
+import MyShowsIconButton from './MyShowsIconButton'
 //this component is the page for a specific tv show, it takes the tv id from the URL
 const TvPage = () => {
   const params = useParams()
@@ -45,7 +46,7 @@ const TvPage = () => {
       .filter((s) => s.season_number !== 0)
       .reduce((a, b) => a + b.episode_count, 0)
     if (episodeCount === 0) return false
-    if (!user.shows[tv.id]) return false
+    if (!user?.shows[tv?.id]) return false
     const episodeCountInUsersShows = user.shows[tv.id].episodes.filter(
       (s) => s.season_number !== 0
     ).length
@@ -88,6 +89,7 @@ const TvPage = () => {
               }
               isInWatchlist={isEntireShowInUserWatchlist}
             />
+            <MyShowsIconButton tv={tv} />
             <Box sx={{ marginRight: 0, marginLeft: 'auto' }}>
               <ImdbRating
                 rating={imdbRating}

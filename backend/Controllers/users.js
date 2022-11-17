@@ -271,11 +271,12 @@ userRouter.delete(
     const userId = request.params.userId
     const tv_id = request.params.tv_id
     if (!request.user || request.user.id !== userId) {
-      return response.sendStatus(200)
+      return response.sendStatus(401)
     }
     await User.findByIdAndUpdate(userId, {
       $set: { [`shows.${tv_id}.episodes`]: [] },
     })
+
     response.sendStatus(200)
   }
 )
@@ -310,10 +311,12 @@ userRouter.post(
       show.episodes = show.episodes.filter(
         (e) => e.season_number !== Number(season_number)
       )
+      show.episodes = [...show.episodes, ...episodes]
+    } else {
+      user.shows.set(tv_id, { episodes })
     }
-    show.episodes = [...show.episodes, ...episodes]
     user.save()
-    response.json(show)
+    response.json(user.shows.get(tv_id))
   }
 )
 
@@ -419,14 +422,12 @@ userRouter.get('/:userId/shows/', async (request, response) => {
 userRouter.patch('/:userId/shows/:tv_id', async (request, response) => {
   const userId = request.params.userId
   if (!request.user || request.user.id !== userId) {
-    return response.sendStatus(200)
+    return response.sendStatus(401)
   }
   const user = await User.findByIdAndUpdate(userId)
   const tv_id = request.params.tv_id
   const show = user.shows.get(tv_id)
-  console.log({ ...show, ...request.body })
-
-  user.shows.set(tv_id, { ...show._doc, ...request.body })
+  user.shows.set(tv_id, { ...show?._doc, ...request.body })
   user.save()
   response.json(user.shows.get(tv_id))
 })

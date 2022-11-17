@@ -23,7 +23,6 @@ const removeShowEpisodes = async (user, tvId) => {
   const authConfig = getAuthConfig(user)
   const response = await axios.delete(
     `/api/users/${user.id}/shows/${tvId}/episodes`,
-    null,
     authConfig
   )
   return response.data
@@ -41,7 +40,6 @@ const removeSeasonEpisodes = async (user, tvId, seasonNumber) => {
   const authConfig = getAuthConfig(user)
   const response = await axios.delete(
     `/api/users/${user.id}/shows/${tvId}/episodes/season/${seasonNumber}`,
-    null,
     authConfig
   )
   return response.data
@@ -59,11 +57,23 @@ const removeEpisode = async (user, tvId, seasonNumber, episode_number) => {
   const authConfig = getAuthConfig(user)
   const response = await axios.delete(
     `/api/users/${user.id}/shows/${tvId}/episodes/season/${seasonNumber}/episode/${episode_number}`,
-    null,
     authConfig
   )
   return response.data
 }
+const setShowIsSaved = async (user, tv, isSaved) => {
+  const body = { tmdb: tv, isSaved }
+  const authConfig = getAuthConfig(user)
+  const response = await axios.patch(
+    `/api/users/${user.id}/shows/${tv.id}`,
+    body,
+    authConfig
+  )
+  return response.data
+}
+const addShow = async (user, tv) => setShowIsSaved(user, tv, true)
+const removeShow = async (user, tv) => setShowIsSaved(user, tv, false)
+
 const userShowsService = {
   addShowEpisodes,
   removeShowEpisodes,
@@ -71,6 +81,8 @@ const userShowsService = {
   removeSeasonEpisodes,
   addEpisode,
   removeEpisode,
+  addShow,
+  removeShow,
 }
 
 export default userShowsService

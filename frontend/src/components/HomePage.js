@@ -19,7 +19,7 @@ import tvService from '../services/tv'
 
 const ShowCard = ({ tv }) => {
   return (
-    <Card sx={{ width: { md: '25%', sm: '50%' } }}>
+    <Card>
       <CardContent>
         <Link
           // <Link
@@ -53,8 +53,8 @@ const Trending = () => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex' ,justifyContent:'space-between'}}>
-        <Typography variant="h6" sx={{ alignItems: 'center' ,display:'flex'}}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex' }}>
           Trending
         </Typography>
         <FormControl>
@@ -90,6 +90,18 @@ const Trending = () => {
             </Button>
           }
         ></MobileStepper>
+      </Box>
+      <Box
+        sx={{
+          display: 'grid',
+          // gridAutoFlow: 'column',
+          gridTemplateColumns: {
+            xs: 'repeat(2,1fr)',
+            sm: 'repeat(4,1fr)',
+          },
+          //'repeat(auto-fit, minmax(185px,1fr))',
+        }}
+      >
         {trending
           ? trending
               .slice(activeStep * 4, activeStep * 4 + 4)
