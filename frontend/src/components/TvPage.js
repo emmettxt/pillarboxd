@@ -41,7 +41,7 @@ const TvPage = () => {
   }, [])
   //this will compare the shows episodes and the episodes in the users watchlist
   const checkAllEpisodesInUsersShow = () => {
-    if (!user || !tv) return false
+    if (!user?.shows || !tv) return false
     const episodeCount = tv.seasons
       .filter((s) => s.season_number !== 0)
       .reduce((a, b) => a + b.episode_count, 0)
