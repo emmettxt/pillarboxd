@@ -1,21 +1,20 @@
-// import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Login from './Login'
 import {
   AppBar,
   Box,
   Link,
-  // IconButton,
+  Slide,
   Toolbar,
   Typography,
   InputBase,
 } from '@mui/material'
 import { styled, alpha } from '@mui/material/styles'
-// import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button } from '@mui/material'
 import { logoutUser } from '../reducers/userReducer'
+import useScrollTrigger from '@mui/material/useScrollTrigger'
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -25,8 +24,7 @@ const Search = styled('div')(({ theme }) => ({
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
   marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
+  [theme.breakpoints.up('xs')]: {
     margin: 'auto',
     width: 'auto',
   },
@@ -46,10 +44,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
-    width: '100%',
+    [theme.breakpoints.up('xs')]: {
+      width: '8ch',
+      '&:focus': {
+        width: '12ch',
+      },
+    },
     [theme.breakpoints.up('sm')]: {
       width: '12ch',
       '&:focus': {
@@ -69,45 +71,45 @@ const Navigation = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="sticky">
-        <Toolbar>
-          <Link
-            href="/"
-            variant="h6"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-            underline="none"
-            color="inherit"
-          >
-            Pillarboxd
-          </Link>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <form onSubmit={handleSearch}>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'search', name: 'search' }}
-              />
-            </form>
-          </Search>
-          {user ? (
-            // <div style={{ display: 'flex' }}>
-            <Typography component="div" variant="subtitle1">
-              {user.username} logged in
-              <Button
-                variant="contained"
-                onClick={() => dispatch(logoutUser())}
-              >
-                log out
-              </Button>
-            </Typography>
-          ) : (
-            // </div>
-            <Login />
-          )}
-        </Toolbar>
-      </AppBar>
+      <Slide appear={false} direction="down" in={!useScrollTrigger()}>
+        <AppBar position="fixed" color="transparent">
+          <Toolbar>
+            <Link
+              href="/"
+              variant="h6"
+              underline="none"
+              color="inherit"
+            >
+              Pillarboxd
+            </Link>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <form onSubmit={handleSearch}>
+                <StyledInputBase
+                  placeholder="Search…"
+                  inputProps={{ 'aria-label': 'search', name: 'search' }}
+                />
+              </form>
+            </Search>
+            {user ? (
+              <Typography component="div" variant="subtitle1">
+                {user.username} logged in
+                <Button
+                  variant="contained"
+                  onClick={() => dispatch(logoutUser())}
+                >
+                  log out
+                </Button>
+              </Typography>
+            ) : (
+              <Login />
+            )}
+          </Toolbar>
+        </AppBar>
+      </Slide>
+      <Toolbar />
     </Box>
   )
 }
