@@ -34,8 +34,12 @@ const UserShowsPage = () => {
       maxWidth="md"
       sx={{
         display: 'grid',
-        gridAutoFlow: 'column',
-        gridTemplateColumns: '1fr 1fr 1fr 1fr',
+        gridTemplateColumns: {
+          xs: 'repeat(3,1fr)',
+          sm: 'repeat(4,1fr)',
+          md: 'repeat(5,1fr)',
+
+        },
       }}
     >
       {shows.map((tv) => (
