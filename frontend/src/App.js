@@ -10,6 +10,7 @@ import TvPage from './components/TvPage'
 import Alerts from './components/Alerts'
 import HomePage from './components/HomePage'
 import UserShowsPage from './components/UserShowsPage'
+import CssBaseline from "@mui/material/CssBaseline"
 
 function App() {
   const dispatch = useDispatch()
@@ -18,16 +19,22 @@ function App() {
   }, [])
   return (
     <ThemeProvider theme={linkTheme}>
-      <Router>
-        <Navigation />
-        <Alerts />
-        <Routes>
-          <Route path="/" element={<HomePage />}></Route>
-          <Route path="/search/:query" element={<SearchResults />}></Route>
-          <Route path="/tv/:id" element={<TvPage />}></Route>
-          <Route path="/user/:userid/shows" element={<UserShowsPage />}></Route>
-        </Routes>
-      </Router>
+      
+      <CssBaseline>
+        <Router>
+          <Navigation />
+          <Alerts />
+          <Routes>
+            <Route path="/" element={<HomePage />}></Route>
+            <Route path="/search/:query" element={<SearchResults />}></Route>
+            <Route path="/tv/:id" element={<TvPage />}></Route>
+            <Route
+              path="/user/:userid/shows"
+              element={<UserShowsPage />}
+            ></Route>
+          </Routes>
+        </Router>
+      </CssBaseline>
     </ThemeProvider>
   )
 }
