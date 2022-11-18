@@ -31,14 +31,11 @@ const formatEpisodeDate = (dateAsString) => {
 const EpisodeAccordion = ({ tvId, episode }) => {
   const user = useSelector((state) => state.user)
 
-  const isEpisodeInWatchlist =
-    user &&
-    user.shows[tvId] &&
-    user.shows[tvId].episodes.some(
-      (w) =>
-        w.season_number === episode.season_number &&
-        w.episode_number === episode.episode_number
-    )
+  const isEpisodeInWatchlist = user?.shows?.[tvId]?.episodes.some(
+    (w) =>
+      w.season_number === episode.season_number &&
+      w.episode_number === episode.episode_number
+  )
   const dispatch = useDispatch()
   const handleWatchlist = async (event) => {
     event.stopPropagation()
@@ -73,7 +70,7 @@ const EpisodeAccordion = ({ tvId, episode }) => {
   return (
     <Accordion
       key={`${tvId}.${episode.season_number}.${episode.episode_number}`}
-      sx={{ background: alpha(theme.palette.background.paper,0.7) }}
+      sx={{ background: alpha(theme.palette.background.paper, 0.7) }}
       TransitionProps={{ mountOnEnter: true }}
     >
       <AccordionSummary
@@ -158,11 +155,8 @@ const SeasonAccordion = ({ tvId, season }) => {
   //checks if the entire season is in the users watchlist
   const isSeasonInWatchList =
     season.episode_count !== 0 &&
-    user &&
-    season &&
-    user.shows[tvId] &&
     season.episode_count ===
-      user.shows[tvId].episodes.filter(
+      user?.shows?.[tvId]?.episodes.filter(
         (e) => e.season_number === season.season_number
       ).length
   const dispatch = useDispatch()
@@ -194,7 +188,11 @@ const SeasonAccordion = ({ tvId, season }) => {
   }
   return season ? (
     //mountOnEnter:true means that data for season is only loaded when accorion expanded
-    <Accordion key={season.id} TransitionProps={{ mountOnEnter: true }} elevation={5}>
+    <Accordion
+      key={season.id}
+      TransitionProps={{ mountOnEnter: true }}
+      elevation={5}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"

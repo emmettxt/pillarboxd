@@ -7,7 +7,7 @@ import userShowsService from '../services/userShows'
 const MyShowsIconButton = ({ tv }) => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
-  const isInMyShows = user?.shows[tv?.id]?.isSaved
+  const isInMyShows = user?.shows?.[tv?.id]?.isSaved
   const handleClick = async () => {
     if (!user) return
     let updatedShow
