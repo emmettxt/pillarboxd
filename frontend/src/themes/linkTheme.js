@@ -35,9 +35,9 @@ Router.propTypes = {
 }
 
 const linkTheme = createTheme({
-  // palette: {
-  //   mode: 'dark',
-  // },
+  palette: {
+    mode: 'dark',
+  },
   components: {
     MuiLink: {
       defaultProps: {
