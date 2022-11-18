@@ -3,6 +3,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Typography,
+  useTheme,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import tvService from '../services/tv'
@@ -12,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setShow } from '../reducers/userReducer'
 import WatchedIconButton from './WatchedIconButton'
 import userShowsService from '../services/userShows'
-
+import { alpha } from '@mui/system'
 //used for formating the episode release date
 const formatEpisodeDate = (dateAsString) => {
   const date = new Date(dateAsString)
@@ -68,10 +69,11 @@ const EpisodeAccordion = ({ tvId, episode }) => {
       dispatch(setShow({ tvId, updatedShow }))
     }
   }
+  const theme = useTheme()
   return (
     <Accordion
       key={`${tvId}.${episode.season_number}.${episode.episode_number}`}
-      sx={{ background: 'rgba(255,255,255,0.7)' }}
+      sx={{ background: alpha(theme.palette.background.paper,0.7) }}
       TransitionProps={{ mountOnEnter: true }}
     >
       <AccordionSummary
@@ -192,7 +194,7 @@ const SeasonAccordion = ({ tvId, season }) => {
   }
   return season ? (
     //mountOnEnter:true means that data for season is only loaded when accorion expanded
-    <Accordion key={season.id} TransitionProps={{ mountOnEnter: true }}>
+    <Accordion key={season.id} TransitionProps={{ mountOnEnter: true }} elevation={5}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
