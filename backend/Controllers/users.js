@@ -251,6 +251,7 @@ userRouter.post(
     } catch (error) {
       next(error)
     }
+
     const user = await User.findByIdAndUpdate(
       userId,
       {
@@ -303,23 +304,49 @@ userRouter.post(
     } catch (error) {
       return next(error)
     }
-
-    const user = await User.findById(userId)
-    const show = user.shows.get(tv_id)
-    //if the shows exists remove the episodes already in the season
-    if (show) {
-      show.episodes = show.episodes.filter(
-        (e) => e.season_number !== Number(season_number)
-      )
-      show.episodes = [...show.episodes, ...episodes]
-    } else {
-      user.shows.set(tv_id, { episodes })
+    //this function defines updating the db
+    const updateDb = async () => {
+      const user = await User.findById(userId)
+      const show = user.shows.get(tv_id)
+      //if the shows exists remove the episodes already in the season
+      if (show) {
+        show.episodes = show.episodes.filter(
+          (e) => e.season_number !== Number(season_number)
+        )
+        show.episodes = [...show.episodes, ...episodes]
+      } else {
+        user.shows.set(tv_id, { episodes })
+      }
+      await user.save()
+      // return user
+      response.json(user.shows.get(tv_id))
     }
-    user.save()
-    response.json(user.shows.get(tv_id))
+    //call update function with retryfucntion
+    const attempts = 10
+    try {
+      await retryFunction(updateDb, attempts, next)
+    } catch (err) {
+      next(err)
+    }
   }
 )
-
+//function take a function and number of attempts and will try a number of attempt to run fucntion without error
+//will throw error if still failing after number of attempts
+const retryFunction = async (fn, attempts) => {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      await fn()
+      return
+    } catch (err) {
+      if (i === attempts + 1) {
+        // return next(err)
+        throw err
+      }
+      await setTimeout(() => null, 100)
+      continue
+    }
+  }
+}
 //this route is for removing a show from a users watchlist
 userRouter.delete(
   '/:userId/shows/:tv_id/episodes/season/:season_number',
@@ -329,16 +356,14 @@ userRouter.delete(
     if (!request.user || request.user.id !== userId) {
       return response.sendStatus(200)
     }
-    const user = await User.findById(userId)
-    try {
-      const show = user.shows.get(tv_id)
-      show.episodes = show.episodes.filter(
-        (e) => e.season_number !== Number(season_number)
-      )
-      user.save()
-    } finally {
-      response.sendStatus(200)
-    }
+    response.sendStatus(202)
+    await User.findByIdAndUpdate(userId, {
+      $pull: {
+        [`shows.${tv_id}.episodes`]: {
+          season_number,
+        },
+      },
+    })
   }
 )
 //adding a single episode to a users watchlist
@@ -359,20 +384,27 @@ userRouter.post(
       return next(err)
     }
 
-    const user = await User.findById(userId)
-    const show = user.shows.get(tv_id)
-    //if the shows exists remove the episodes already in the season
-    if (show) {
-      show.episodes = show.episodes.filter(
-        (e) =>
-          e.season_number !== Number(season_number) ||
-          e.episode_number !== Number(episode_number)
-      )
+    const updateDb = async () => {
+      const user = await User.findById(userId)
+      const show = user.shows.get(tv_id)
+      //if the shows exists remove the episodes already in the season
+      if (show) {
+        show.episodes = show.episodes.filter(
+          (e) =>
+            e.season_number !== Number(season_number) ||
+            e.episode_number !== Number(episode_number)
+        )
+      }
+      const episode = { season_number, episode_number }
+      show.episodes = [...show.episodes, episode]
+      await user.save()
+      response.json(show)
     }
-    const episode = { season_number, episode_number }
-    show.episodes = [...show.episodes, episode]
-    await user.save()
-    response.json(show)
+    try {
+      retryFunction(updateDb, 10)
+    } catch (err) {
+      next(err)
+    }
   }
 )
 
@@ -383,21 +415,17 @@ userRouter.delete(
     const { userId, tv_id, season_number, episode_number } = request.params
 
     if (!request.user || request.user.id !== userId) {
-      return response.sendStatus(200)
+      return response.sendStatus(401)
     }
-    const user = await User.findById(userId)
-    try {
-      const show = user.shows.get(tv_id)
-      show.episodes = show.episodes.filter(
-        (e) =>
-          e.season_number !== Number(season_number) ||
-          e.episode_number !== Number(episode_number)
-      )
-
-      user.save()
-    } finally {
-      response.sendStatus(200)
-    }
+    response.sendStatus(202)
+    await User.findByIdAndUpdate(userId, {
+      $pull: {
+        [`shows.${tv_id}.episodes`]: {
+          season_number,
+          episode_number,
+        },
+      },
+    })
   }
 )
 userRouter.get('/:userId/shows/:tv_id/', async (request, response) => {
