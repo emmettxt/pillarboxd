@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux'
+import {useSelector } from 'react-redux'
 import { Container } from '@mui/system'
 import { Link, Card, CardContent, CardMedia, Typography } from '@mui/material'
 const ShowCard = ({ tv }) => {
