@@ -5,7 +5,7 @@ import {
   CardContent,
   CardHeader,
   Divider,
-  Box,
+  Box
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -67,13 +67,16 @@ const TvPage = () => {
   return tv ? (
     <Container maxWidth="md">
       <Card>
-        <Box
-          style={{ backGroundSize: 'cover' }}
-          sx={{
-            background: `linear-gradient(to bottom, rgba(0, 0, 0, 0), white),url('https://image.tmdb.org/t/p/w1280/${tv.backdrop_path}') center / contain no-repeat`,
-            paddingTop: '56.25%',
+        <img
+          src={`https://image.tmdb.org/t/p/w1280/${tv.backdrop_path}`}
+          style={{
+            width: '100%',
+            aspectRatio: '16/9',
+            maskImage: `linear-gradient(to bottom, rgba(0,0,0,1)50%, rgba(0,0,0,0))`,
+            maskMode: 'alpha',
           }}
-        ></Box>
+        >
+        </img>
         <CardHeader title={tv.name} subheader={tv.tagline} />
         <CardContent>
           <Typography variant="body2" color="text.secondary">
