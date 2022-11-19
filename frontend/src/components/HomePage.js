@@ -16,6 +16,10 @@ import { Container } from '@mui/system'
 import { useEffect, useState } from 'react'
 // import { Link } from 'react-router-dom'
 import tvService from '../services/tv'
+import SwipeableViews from 'react-swipeable-views'
+import { autoPlay } from 'react-swipeable-views-utils'
+
+const AutoPlaySwipeableViews = autoPlay(SwipeableViews)
 
 const ShowCard = ({ tv }) => {
   return (
@@ -24,6 +28,7 @@ const ShowCard = ({ tv }) => {
         <Link
           // <Link
           href={`/tv/${tv.id}`}
+          underline="none"
         >
           <CardMedia
             component="img"
@@ -31,7 +36,9 @@ const ShowCard = ({ tv }) => {
             image={`https://image.tmdb.org/t/p/w185/${tv.poster_path}`}
             alt={tv.name + 'poster'}
           />
-          <Typography textAlign="center">{tv.name}</Typography>
+          <Typography textAlign="center" color={'text.primary'}>
+            {tv.name}
+          </Typography>
         </Link>
       </CardContent>
     </Card>
@@ -51,6 +58,9 @@ const Trending = () => {
   const handleNext = () => setActiveStep(activeStep + 1)
   const handleBack = () => setActiveStep(activeStep - 1)
 
+  const handleStepChange = (step) => {
+    setActiveStep(step)
+  }
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -91,7 +101,7 @@ const Trending = () => {
           }
         ></MobileStepper>
       </Box>
-      <Box
+      {/* <Box
         sx={{
           display: 'grid',
           // gridAutoFlow: 'column',
@@ -101,13 +111,30 @@ const Trending = () => {
           },
           //'repeat(auto-fit, minmax(185px,1fr))',
         }}
+      > */}
+      <AutoPlaySwipeableViews
+        axis="x"
+        index={activeStep}
+        onChange={handleStepChange}
+        enableMouseEvents
       >
-        {trending
-          ? trending
-              .slice(activeStep * 4, activeStep * 4 + 4)
-              .map((tv) => <ShowCard tv={tv} key={tv.id} />)
-          : null}
-      </Box>
+        {Array.from(Array(trending?.length / 4)).map((x, i) => (
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: {
+                xs: 'repeat(2,1fr)',
+                sm: 'repeat(4,1fr)',
+              },
+            }}
+            key={i}
+          >
+            {trending?.slice(i * 4, i * 4 + 4).map((tv) => (
+              <ShowCard tv={tv} key={tv.id} />
+            ))}
+          </Box>
+        ))}
+      </AutoPlaySwipeableViews>
     </Box>
   )
 }
