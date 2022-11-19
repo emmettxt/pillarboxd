@@ -5,7 +5,7 @@ import {
   CardContent,
   CardHeader,
   Divider,
-  Box
+  Box,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -18,6 +18,7 @@ import ImdbRating from './ImdbRating'
 import WatchedIconButton from './WatchedIconButton'
 import userShowsService from '../services/userShows'
 import MyShowsIconButton from './MyShowsIconButton'
+import PeopleCarousel from './PeopleCarousel'
 //this component is the page for a specific tv show, it takes the tv id from the URL
 const TvPage = () => {
   const params = useParams()
@@ -38,6 +39,7 @@ const TvPage = () => {
       //   setTv({ ...tv, seasons: tv.seasons.reverse() })
       // })
     })
+    tvService.getCredits(tvId).then((credits) => setCredits(credits))
   }, [])
   //this will compare the shows episodes and the episodes in the users watchlist
   const checkAllEpisodesInUsersShow = () => {
@@ -64,6 +66,7 @@ const TvPage = () => {
     const updatedShow = { ...user.shows[tv.id], episodes: [] }
     dispatch(setShow({ tvId, updatedShow }))
   }
+  const [credits, setCredits] = useState({ cast: [], crew: [] })
   return tv ? (
     <Container maxWidth="md">
       <Card>
@@ -75,8 +78,7 @@ const TvPage = () => {
             maskImage: `linear-gradient(to bottom, rgba(0,0,0,1)50%, rgba(0,0,0,0))`,
             maskMode: 'alpha',
           }}
-        >
-        </img>
+        ></img>
         <CardHeader title={tv.name} subheader={tv.tagline} />
         <CardContent>
           <Typography variant="body2" color="text.secondary">
@@ -101,6 +103,20 @@ const TvPage = () => {
             </Box>
           </Box>
         </CardContent>
+        <Divider />
+        <PeopleCarousel
+          people={credits.cast}
+          title={'Cast'}
+          creditAttribute={'character'}
+        />
+        <Divider />
+
+        <PeopleCarousel
+          people={credits.crew}
+          title={'Crew'}
+          creditAttribute={'job'}
+        />
+
         <Divider />
         <CardContent>
           <Typography variant="h6" color="text.primary">
