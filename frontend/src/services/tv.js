@@ -47,6 +47,12 @@ const getCredits = async (tvId) => {
   const response = await axios.get(`${baseUrl}/${tvId}/credits`)
   return response.data
 }
+const getEpisode = async (tvId, seasonNumber, episodeNumber) => {
+  const response = await axios.get(
+    `${baseUrl}/${tvId}/season/${seasonNumber}/episode/${episodeNumber}`
+  )
+  return response.data
+}
 const tvService = {
   getTv,
   getTvSeason,
@@ -56,5 +62,6 @@ const tvService = {
   getImdbId,
   getTvWithExternalIds,
   getCredits,
+  getEpisode
 }
 export default tvService

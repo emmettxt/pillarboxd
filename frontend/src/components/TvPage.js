@@ -68,7 +68,8 @@ const TvPage = () => {
   }
   const [credits, setCredits] = useState({ cast: [], crew: [] })
   return tv ? (
-    <Container maxWidth="md">
+    <Container
+     >
       <Card>
         <Box sx={{ width: '100%', aspectRatio: '16/9', position: 'relative' }}>
           <img

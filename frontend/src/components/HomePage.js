@@ -33,7 +33,7 @@ const ShowCard = ({ tv }) => {
           <CardMedia
             component="img"
             // height="140"
-            image={`https://image.tmdb.org/t/p/w185/${tv.poster_path}`}
+            image={`https://image.tmdb.org/t/p/w342/${tv.poster_path}`}
             alt={tv.name + 'poster'}
           />
           <Typography textAlign="center" color={'text.primary'}>
@@ -140,7 +140,7 @@ const Trending = () => {
 }
 const HomePage = () => {
   return (
-    <Container maxWidth="md">
+    <Container>
       <Trending />
     </Container>
   )
