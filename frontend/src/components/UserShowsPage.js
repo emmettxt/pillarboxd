@@ -24,8 +24,8 @@ const ShowCard = ({ tv }) => {
 
 const UserShowsPage = () => {
   const user = useSelector((state) => state.user)
-  const shows = user
-    ? Object.entries(user?.shows)
+  const shows = user?.shows
+    ? Object.entries(user.shows)
         .filter((a) => a[1].isSaved)
         .map((a) => a[1].tmdb)
     : []
