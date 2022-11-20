@@ -1,4 +1,4 @@
-import Navigation from './components/Navigation'
+import Navbar from './components/Navigation/Navbar'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import CssBaseline from '@mui/material/CssBaseline'
 import { useEffect } from 'react'
@@ -21,7 +21,7 @@ function App() {
     <ThemeProvider theme={linkTheme}>
       <CssBaseline>
         <Router>
-          <Navigation />
+          <Navbar />
           <Alerts />
           <Routes>
             <Route path="/" element={<HomePage />}></Route>

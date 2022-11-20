@@ -4,8 +4,8 @@ import { Box } from '@mui/material'
 import { Button } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { loginUser } from '../reducers/userReducer'
-import userService from '../services/user'
+import { loginUser } from '../../reducers/userReducer'
+import userService from '../../services/user'
 
 const style = {
   position: 'absolute',
@@ -65,10 +65,8 @@ const Login = () => {
     setIsLogin(true)
   }
   return (
-    <div>
-      <Button onClick={handleOpen} variant="contained">
-        login
-      </Button>
+    <Button onClick={handleOpen}>
+      <Typography>login</Typography>
       <Modal
         open={open}
         onClose={handleClose}
@@ -192,7 +190,7 @@ const Login = () => {
           )}
         </Box>
       </Modal>
-    </div>
+    </Button>
   )
 }
 
