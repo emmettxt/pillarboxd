@@ -1,6 +1,6 @@
 import Navigation from './components/Navigation'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import SearchResults from './components/SearchResults'
+import CssBaseline from '@mui/material/CssBaseline'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { initializeUser } from './reducers/userReducer'
@@ -10,8 +10,8 @@ import TvPage from './components/TvPage'
 import Alerts from './components/Alerts'
 import HomePage from './components/HomePage'
 import UserShowsPage from './components/UserShowsPage'
-import CssBaseline from "@mui/material/CssBaseline"
-
+import PersonPage from './components/PersonPage'
+import SearchResults from './components/SearchResults'
 function App() {
   const dispatch = useDispatch()
   useEffect(() => {
@@ -19,7 +19,6 @@ function App() {
   }, [])
   return (
     <ThemeProvider theme={linkTheme}>
-      
       <CssBaseline>
         <Router>
           <Navigation />
@@ -29,8 +28,12 @@ function App() {
             <Route path="/search/:query" element={<SearchResults />}></Route>
             <Route path="/tv/:id" element={<TvPage />}></Route>
             <Route
-              path="/user/:userid/shows"
+              path="/users/:userid/shows"
               element={<UserShowsPage />}
+            ></Route>
+            <Route
+              path="/people/:personId"
+              element={<PersonPage />}
             ></Route>
           </Routes>
         </Router>
