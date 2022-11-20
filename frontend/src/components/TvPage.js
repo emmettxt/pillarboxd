@@ -70,16 +70,23 @@ const TvPage = () => {
   return tv ? (
     <Container maxWidth="md">
       <Card>
-        <img
-          src={`https://image.tmdb.org/t/p/w1280/${tv.backdrop_path}`}
-          style={{
-            width: '100%',
-            aspectRatio: '16/9',
-            maskImage: `linear-gradient(to bottom, rgba(0,0,0,1)50%, rgba(0,0,0,0))`,
-            maskMode: 'alpha',
-          }}
-        ></img>
-        <CardHeader title={tv.name} subheader={tv.tagline} />
+        <Box sx={{ width: '100%', aspectRatio: '16/9', position: 'relative' }}>
+          <img
+            src={`https://image.tmdb.org/t/p/w1280/${tv.backdrop_path}`}
+            style={{
+              width: '100%',
+              height: '100%',
+              // aspectRatio: '16/9',
+              maskImage: `linear-gradient(to bottom, rgba(0,0,0,1)50%, rgba(0,0,0,0))`,
+              maskMode: 'alpha',
+            }}
+          ></img>
+          <CardHeader
+            title={tv.name}
+            subheader={tv.tagline}
+            sx={{ position: 'absolute', bottom: 0 }}
+          />
+        </Box>
         <CardContent>
           <Typography variant="body2" color="text.secondary">
             {tv.overview}
