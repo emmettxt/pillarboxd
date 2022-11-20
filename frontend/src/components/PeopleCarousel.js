@@ -29,6 +29,7 @@ const PeopleCarousel = ({ people, title, creditAttribute }) => {
           display: 'grid',
           gridAutoFlow: 'column',
           gridAutoColumns: {
+            lg: '7%',
             md: '10%',
             sm: '12.5%',
             xs: '20%',
