@@ -31,7 +31,7 @@ const SearchResult = ({ object }) => {
     >
       <ListItemButton
         component={Link}
-        to={`/tv/${object.id}`}
+        to={isTv?`/tv/${object.id}`:`/people/${object.id}`}
         sx={{ order: { xs: 2, sm: 1 } }}
       >
         <ListItemAvatar>
