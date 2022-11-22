@@ -7,9 +7,14 @@ userRouter.get('/', async (request, response) => {
   response.send(users)
 })
 
-userRouter.get('/:id', async (request, response) => {
-  const user = await User.findById(request.params.id)
-  response.json(user)
+userRouter.get('/:id', async (request, response, next) => {
+  try {
+    const user = await User.findById(request.params.id)
+    if (!user) return response.sendStatus(404)
+    response.send(user)
+  } catch (error) {
+    next(error)
+  }
 })
 
 userRouter.post('/', async (request, response) => {

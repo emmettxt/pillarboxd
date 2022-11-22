@@ -8,9 +8,9 @@ const showSchema = new mongoose.Schema({
 showSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     delete returnedObject._id
-    returnedObject.episodes.forEach(episode => {
+    returnedObject.episodes.forEach((episode) => {
       delete episode._id
-    });
+    })
   },
 })
 
@@ -33,6 +33,7 @@ const userSchema = new mongoose.Schema({
   name: String,
   passwordHash: String,
   shows: { type: Map, of: showSchema },
+  reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
 })
 
 userSchema.set('toJSON', {

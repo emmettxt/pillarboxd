@@ -34,6 +34,10 @@ const userExtractor = async (request, response, next) => {
   next()
 }
 const errorHandler = (error, request, response, next) => {
+  if(error.name==='CastError'){
+    return response.status(400).json({message:error.message})
+
+  }
   if (error.name === 'AxiosError') {
     return response.status(error.response.status).json(error.response.data)
   } else {
