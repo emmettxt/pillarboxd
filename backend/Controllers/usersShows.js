@@ -9,8 +9,9 @@ usersShowsRouter.post(
   '/:userId/shows/:tv_id/episodes',
   async (request, response, next) => {
     const { userId, tv_id } = request.params
+    if(!request.user) return response.sendStatus(401)
     if (request.user.id !== userId) {
-      return response.sendStatus(401)
+      return response.sendStatus(403)
     }
     let episodes
     try {

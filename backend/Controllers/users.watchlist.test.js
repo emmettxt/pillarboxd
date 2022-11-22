@@ -9,7 +9,7 @@ const {
   nonExisitingUserId,
   getTestUser,
   getValidTokenForUser,
-} = require('./users.watchlis.testHelper')
+} = require('./usersShows.testHelper')
 const tmdbUtil = require('../utils/tmdb')
 //set DB to have exactly one user with single watchlist item with firs two episodes of season 1
 beforeEach(async () => {
