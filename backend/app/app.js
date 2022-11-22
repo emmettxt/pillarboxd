@@ -8,6 +8,7 @@ const middleware = require('../utils/middleware')
 const userRouter = require('../controllers/users')
 const tmdbProxyRouter = require('../controllers/tmdbProxy')
 const imdbRouter = require('../controllers/imdb')
+const userShowsRouter = require('../controllers/usersShows')
 
 mongoose.connect(config.MONGODB_URI)
 
@@ -20,6 +21,7 @@ app.use(middleware.userExtractor)
 
 app.use('/api/login',loginRouter)
 app.use('/api/users',userRouter)
+app.use('/api/users',userShowsRouter)
 app.use('/api/tmdb',tmdbProxyRouter)
 app.use('/api/imdb',imdbRouter)
 app.use(middleware.errorHandler)

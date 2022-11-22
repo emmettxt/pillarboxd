@@ -5,6 +5,14 @@ const showSchema = new mongoose.Schema({
   episodes: [{ season_number: Number, episode_number: Number }],
   tmdb: Map,
 })
+showSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    delete returnedObject._id
+    returnedObject.episodes.forEach(episode => {
+      delete episode._id
+    });
+  },
+})
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -24,14 +32,13 @@ const userSchema = new mongoose.Schema({
   active: Boolean,
   name: String,
   passwordHash: String,
-  watchlist: [{ tv_id: Number, season_number: Number, episode_number: Number }],
   shows: { type: Map, of: showSchema },
 })
 
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    ;(returnedObject.id = returnedObject._id.toString()),
-      delete returnedObject._id
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
     delete returnedObject.__v
     delete returnedObject.passwordHash
   },
