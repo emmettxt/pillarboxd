@@ -8,7 +8,6 @@ import {
 import { List } from '@mui/material'
 import { Avatar } from '@mui/material'
 import { Divider } from '@mui/material'
-import { Button } from '@mui/material'
 import { Container } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -19,10 +18,6 @@ const firstAirDateYear = (firstAirDate) => {
 }
 const SearchResult = ({ object }) => {
   const isTv = object.media_type === 'tv'
-  const handleAddToWatchlist = async () => {
-    // todo
-    // const response = await axios.post(`/api/user/wacthlist`)
-  }
   return (
     <ListItem
       componentsProps={{ key: object.id }}
@@ -31,7 +26,7 @@ const SearchResult = ({ object }) => {
     >
       <ListItemButton
         component={Link}
-        to={isTv?`/tv/${object.id}`:`/people/${object.id}`}
+        to={isTv ? `/tv/${object.id}` : `/people/${object.id}`}
         sx={{ order: { xs: 2, sm: 1 } }}
       >
         <ListItemAvatar>
@@ -55,15 +50,6 @@ const SearchResult = ({ object }) => {
           secondary={object.overview}
         />
       </ListItemButton>
-      {/* {isTv ? (
-        <Button
-          onClick={handleAddToWatchlist}
-          variant="contained"
-          sx={{ minWidth: '7em', order: { xs: 1, sm: 2 } }}
-        >
-          add to watchlist
-        </Button>
-      ) : null} */}
     </ListItem>
   )
 }

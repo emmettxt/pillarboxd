@@ -7,7 +7,6 @@ import {
   Typography,
   CardActionArea,
   Divider,
-  CardActions,
   Box,
 } from '@mui/material'
 import tvService from '../services/tv'
