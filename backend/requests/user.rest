@@ -4,9 +4,9 @@ content-type: application/json
 
 {
   "password":"password",
-  "username":"root1",
+  "username":"testUser1",
   "name":"Emmet",
-  "email":"root1@test.test"
+  "email":"testUser1@test.test"
 }
 
 ###
@@ -21,4 +21,8 @@ content-type: application/json
 }
 
 ###
-GET http://localhost:3000/users
+GET http://localhost:3001/api/users/637d0fe4a683ab7ad70ab6e0
+
+
+###
+GET http://localhost:3001/api/users/

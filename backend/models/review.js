@@ -40,35 +40,6 @@ reviewShema.set('toJSON', {
     delete returnedObject.__v
   },
 })
-/* //additional validation to check that season number is given when episode number is given
-reviewShema.pre('validate', (next) => {
-  console.log(this.tv_id)
-  const isSeasonNumberMissing = this.season_number === undefined
-  const isEpisodeNumberMissing = this.episode_number === undefined
-  // console.log({isSeasonNumberMissing, isEpisodeNumberMissing })
-  // if (isSeasonNumberMissing && !isEpisodeNumberMissing) {
-  //   const error = new mongoose.Error.ValidationError(this)
-  //   error.addError(
-  //     'season_number',
-  //     new mongoose.Error.ValidatorError({
-  //       message: 'epsiode_number is required if season_number is given',
-  //     })
-  //   )
-  //   next(error)
-  // } else
-  if (!isEpisodeNumberMissing && isSeasonNumberMissing) {
-    const error = new mongoose.Error.ValidationError(this)
-    error.addError(
-      'season_number',
-      new mongoose.Error.ValidatorError({
-        message: 'season_number is required if epsiode_number is given',
-      })
-    )
-    next(error)
-  } else {
-    next()
-  }
-}) */
 
 const Review = mongoose.model('Review', reviewShema)
 module.exports = Review

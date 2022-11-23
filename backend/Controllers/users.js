@@ -17,7 +17,7 @@ userRouter.get('/:id', async (request, response, next) => {
   }
 })
 
-userRouter.post('/', async (request, response) => {
+userRouter.post('/', async (request, response, next) => {
   const { username, name, password, email } = request.body
   const existingUser = await User.findOne({ username: username })
   if (existingUser) {
@@ -55,7 +55,7 @@ userRouter.post('/', async (request, response) => {
     if (error.name === 'ValidationError') {
       response.status(400).json({ error: error.message })
     } else {
-      console.log(error.message)
+      next(error)
     }
   }
 })

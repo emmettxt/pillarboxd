@@ -9,10 +9,8 @@ imdbRouter.get('/:id', async (request, response) => {
     const imdbResponse = await axios.get(`${baseUrl}/${id}`)
     const $ = cheerio.load(imdbResponse.data)
     const selection = $("[data-testid='hero-rating-bar__aggregate-rating'] [data-testid='hero-rating-bar__aggregate-rating__score']")
-    console.log()
     return response.status(imdbResponse.status).send({imdbRating: selection.children().first().text()})
   } catch (error) {
-    console.log(error)
     return response.status(500)
   }
 })

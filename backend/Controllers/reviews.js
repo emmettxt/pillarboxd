@@ -6,7 +6,6 @@ reviewRouter.get('/:id', async (request, response) => {
   response.send(reviews)
 })
 reviewRouter.get('/', async (request, response) => {
-  console.log(request.query)
   const reviews = await Review.find(request.query)
   response.send(reviews)
 })

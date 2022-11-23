@@ -111,7 +111,6 @@ describe('adding entire show', () => {
   })
   test.only('valid token for non existing user fails with 401', async () => {
     const user = await nonExisitingUser()
-    console.log(user)
     const token = await getValidTokenForUser(user)
     const toAdd = Object.keys(initialUserWithShow.shows)[0]
 
@@ -124,6 +123,5 @@ describe('adding entire show', () => {
 })
 
 afterAll(async () => {
-  console.log('mongoose connection close')
   await mongoose.connection.close()
 })

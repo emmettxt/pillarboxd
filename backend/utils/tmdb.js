@@ -18,20 +18,11 @@ const mapSeasonsToWatchlist = (tv_id, seasons) =>
 
 //this function will get an entire season of a show for a users watchlist
 const getSeasonWatchlist = async (tv_id, season_number) => {
-  try {
-    const response = await axios.get(
-      `${baseUrl}/tv/${tv_id}?api_key=${api_key}`
-    )
-    const season = response.data.seasons.find(
-      (season) => season.season_number === season_number
-    )
-    return mapSeasonToWatchlist(tv_id, season)
-  } catch (error) {
-    console.log('Axios Error: ', error.response)
-    console.log(`getSeasonWatchlist({${tv_id},${season_number}})`)
-    console.log(`types({${typeof tv_id},${typeof season_number}})`)
-    throw error
-  }
+  const response = await axios.get(`${baseUrl}/tv/${tv_id}?api_key=${api_key}`)
+  const season = response.data.seasons.find(
+    (season) => season.season_number === season_number
+  )
+  return mapSeasonToWatchlist(tv_id, season)
 }
 
 // this function will make the required calls to TMDB and return a object with an entire shows watchlist
@@ -54,20 +45,11 @@ const mapSeasonsToEpisodes = (tv_id, seasons) =>
 
 //this function will get an entire season of a show for a users watchlist
 const getSeasonEpisodes = async (tv_id, season_number) => {
-  try {
-    const response = await axios.get(
-      `${baseUrl}/tv/${tv_id}?api_key=${api_key}`
-    )
-    const season = response.data.seasons.find(
-      (season) => season.season_number === season_number
-    )
-    return mapSeasonToEpisodes(tv_id, season)
-  } catch (error) {
-    console.log('Axios Error: ', error.response)
-    console.log(`getSeasonWatchlist({${tv_id},${season_number}})`)
-    console.log(`types({${typeof tv_id},${typeof season_number}})`)
-    throw error
-  }
+  const response = await axios.get(`${baseUrl}/tv/${tv_id}?api_key=${api_key}`)
+  const season = response.data.seasons.find(
+    (season) => season.season_number === season_number
+  )
+  return mapSeasonToEpisodes(tv_id, season)
 }
 
 // this function will make the required calls to TMDB and return a object with an entire shows watchlist
