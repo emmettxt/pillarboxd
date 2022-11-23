@@ -1,6 +1,6 @@
 import AddToQueueIcon from '@mui/icons-material/AddToQueue'
 import RemoveFromQueueIcon from '@mui/icons-material/RemoveFromQueue'
-import { IconButton } from '@mui/material'
+import { IconButton, Tooltip } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { setShow } from '../reducers/userReducer'
 import userShowsService from '../services/userShows'
@@ -19,13 +19,15 @@ const MyShowsIconButton = ({ tv }) => {
     dispatch(setShow({ tvId: tv.id, updatedShow }))
   }
   return (
-    <IconButton onClick={handleClick}>
-      {isInMyShows ? (
-        <RemoveFromQueueIcon color="success" />
-      ) : (
-        <AddToQueueIcon />
-      )}
-    </IconButton>
+    <Tooltip title={isInMyShows?'Remove from Your Shows':'Add to Your Shows'}>
+      <IconButton onClick={handleClick}>
+        {isInMyShows ? (
+          <RemoveFromQueueIcon color="success" />
+        ) : (
+          <AddToQueueIcon />
+        )}
+      </IconButton>
+    </Tooltip>
   )
 }
 
