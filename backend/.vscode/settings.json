@@ -1,4 +1,5 @@
 {
   "appService.defaultWebAppToDeploy": "/subscriptions/5fb01a35-100c-422b-b961-c87884b39468/AppServices/subscriptions/5fb01a35-100c-422b-b961-c87884b39468/resourceGroups/pillarboxd/providers/Microsoft.Web/sites/pillarboxd",
-  "appService.deploySubpath": "."
+  "appService.deploySubpath": ".",
+  "jest.autoRun": "off"
 }
