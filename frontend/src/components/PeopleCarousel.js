@@ -1,4 +1,4 @@
-import { Avatar, Button, ButtonBase, Link, Typography } from '@mui/material'
+import { Avatar, Link, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 
 const Person = ({ person, creditAttribute }) => {
@@ -6,7 +6,11 @@ const Person = ({ person, creditAttribute }) => {
     <Box>
       <Link href={`/people/${person.id}`} underline="none">
         <Avatar
-          src={`https://image.tmdb.org/t/p/w45/${person.profile_path}`}
+          src={
+            person.profile_path
+              ? `https://image.tmdb.org/t/p/w45/${person.profile_path}`
+              : null
+          }
           sx={{ margin: 'auto' }}
         />
         <Typography variant={'body2'} color={'text.primary'} align="center">
