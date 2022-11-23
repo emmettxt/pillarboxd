@@ -25,12 +25,7 @@ tmdbProxyRouter.get(/\/.+/, async (request, response, next) => {
 
     response.status(200).json(apiResponse.data)
   } catch (err) {
-    if (err.name === 'AxiosError') {
-      console.log(err.response.status)
-      return response.status(err.response.status).json(err.response.data)
-    }
-      next(err)
-    
+    next(err)
   }
 })
 
