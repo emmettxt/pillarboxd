@@ -23,16 +23,16 @@ const Person = ({ person, creditAttribute }) => {
 const PeopleCarousel = ({ people, title, creditAttribute }) => {
   return (
     <Box>
-      <Typography variant="subtitle1">{title}</Typography>
+      <Typography variant="h6">{title}</Typography>
       <Box
         sx={{
           display: 'grid',
           gridAutoFlow: 'column',
           gridAutoColumns: {
-            lg: '7%',
-            md: '10%',
-            sm: '12.5%',
-            xs: '20%',
+            lg: '80px',
+            md: '100px',
+            sm: '90px',
+            xs: '80px',
           },
           columnGap: '5px',
           overflow: 'auto',
@@ -40,7 +40,7 @@ const PeopleCarousel = ({ people, title, creditAttribute }) => {
       >
         {people?.map((person) => (
           <Person
-            key={person.id}
+            key={person.credit_id}
             person={person}
             creditAttribute={creditAttribute}
           ></Person>

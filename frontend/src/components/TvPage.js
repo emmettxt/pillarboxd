@@ -68,8 +68,7 @@ const TvPage = () => {
   }
   const [credits, setCredits] = useState({ cast: [], crew: [] })
   return tv ? (
-    <Container
-     >
+    <Container>
       <Card>
         <Box sx={{ width: '100%', aspectRatio: '16/9', position: 'relative' }}>
           <img
@@ -111,7 +110,7 @@ const TvPage = () => {
             </Box>
           </Box>
         </CardContent>
-        <Divider />
+        {/* <Divider />
         <PeopleCarousel
           people={credits.cast}
           title={'Cast'}
@@ -123,22 +122,43 @@ const TvPage = () => {
           people={credits.crew}
           title={'Crew'}
           creditAttribute={'job'}
-        />
+        /> */}
 
-        <Divider />
-        <CardContent>
-          <Typography variant="h6" color="text.primary">
-            Episodes
-          </Typography>
-          {tv.seasons.map((season) => (
-            <SeasonAccordion
-              tvId={tv.id}
-              seasonNumber={season.season_number}
-              key={season.id}
-              season={season}
+        <Divider variant='middle' />
+        <Box
+          sx={{
+            display: { md: 'grid', xs: 'block' },
+            gridTemplateColumns: '50% 50%',
+          }}
+        >
+          <CardContent>
+            <PeopleCarousel
+              people={credits.cast}
+              title={'Cast'}
+              creditAttribute={'character'}
             />
-          ))}
-        </CardContent>
+            <Divider />
+
+            <PeopleCarousel
+              people={credits.crew}
+              title={'Crew'}
+              creditAttribute={'job'}
+            />
+          </CardContent>
+          <CardContent>
+            <Typography variant="h6" color="text.primary">
+              Episodes
+            </Typography>
+            {tv.seasons.map((season) => (
+              <SeasonAccordion
+                tvId={tv.id}
+                seasonNumber={season.season_number}
+                key={season.id}
+                season={season}
+              />
+            ))}
+          </CardContent>
+        </Box>
       </Card>
     </Container>
   ) : null
