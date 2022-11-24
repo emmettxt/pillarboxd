@@ -65,8 +65,10 @@ const Login = () => {
     setIsLogin(true)
   }
   return (
-    <Button onClick={handleOpen}>
-      <Typography>login</Typography>
+    <>
+      <Button onClick={handleOpen}>
+        <Typography>login</Typography>
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -190,7 +192,7 @@ const Login = () => {
           )}
         </Box>
       </Modal>
-    </Button>
+    </>
   )
 }
 

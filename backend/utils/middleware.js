@@ -39,6 +39,9 @@ const errorHandler = (error, request, response, next) => {
       return response.status(400).json({ message: error.message })
 
     case 'AxiosError':
+      if (error.code === 'ECONNABORTED') {
+        return next(error)
+      }
       return response.status(error.response.status).json(error.response.data)
 
     case 'MongoServerError':
