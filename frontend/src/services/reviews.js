@@ -33,5 +33,9 @@ const addReview = async (
   const response = await axios.post(`${baseUrl}`, data, authconfig)
   return response.data
 }
-const reviewService = { getReviews, addReview }
+const removeReview = async (user, reviewId) => {
+  const authconfig = getAuthConfig(user)
+  await axios.delete(`${baseUrl}/${reviewId}`, authconfig)
+}
+const reviewService = { getReviews, addReview, removeReview }
 export default reviewService

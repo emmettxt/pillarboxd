@@ -17,6 +17,8 @@ import { useEffect, useState } from 'react'
 import reviewService from '../../services/reviews'
 import ReactShowMoreText from 'react-show-more-text'
 import AddReviewModal from './AddReviewModal'
+import DeleteReviewButton from './DeleteReviewButton'
+import { useSelector } from 'react-redux'
 const Reviews = ({ tv_id, seasons }) => {
   const [episodeNumber, setEpisodeNumber] = useState('')
   const [selectedSeason, setSelectedSeason] = useState('')
@@ -45,7 +47,10 @@ const Reviews = ({ tv_id, seasons }) => {
   const handleNewReview = (newReview) => {
     setReviews([newReview, ...reviews])
   }
-
+  const handleRemoveReview = (reviewId) => {
+    setReviews(reviews.filter((r) => r.id !== reviewId))
+  }
+  const user = useSelector((s) => s.user)
   return (
     <Box>
       <Box display={'flex'} justifyContent={'space-between'}>
@@ -146,17 +151,27 @@ const Reviews = ({ tv_id, seasons }) => {
                       }}
                     >
                       <Typography>{review.user.username}</Typography>
-                      <Typography
-                        color={'text.secondary'}
-                        fontSize={'0.875rem'}
-                      >
-                        {review.season_number
-                          ? `Season ${review.season_number}`
-                          : null}
-                        {review.episode_number
-                          ? ` - Episode ${review.episode_number}`
-                          : null}
-                      </Typography>
+                      <Box sx={{ display: 'flex' }}>
+                        <Typography
+                          color={'text.secondary'}
+                          fontSize={'0.875rem'}
+                        >
+                          {review.season_number
+                            ? `Season ${review.season_number}`
+                            : null}
+                          {review.episode_number
+                            ? ` - Episode ${review.episode_number}`
+                            : null}
+                        </Typography>
+                        {user && review.user.id === user.id ? (
+                          <DeleteReviewButton
+                            reviewId={review.id}
+                            handleRemoveReview={() =>
+                              handleRemoveReview(review.id)
+                            }
+                          />
+                        ) : null}
+                      </Box>
                     </Box>
                   }
                   secondary={

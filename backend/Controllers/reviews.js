@@ -35,6 +35,22 @@ reviewRouter.post('/', async (request, response, next) => {
     user: { id: user.id, username: user.username },
   })
 })
+reviewRouter.delete('/:id', async (request, response) => {
+  const id = request.params.id
+  const user = request.user
+
+  if (!user) {
+    return response.sendStatus(401)
+  }
+  const review = await Review.findById(id)
+  if (review.user.toString() !== user.id) {
+    console.log({ 'review.user': review.user.toString(), 'user.id': user.id })
+    return response.sendStatus(401)
+  }
+
+  review.delete()
+  response.sendStatus(202)
+})
 //updating the content of the review
 reviewRouter.patch('/:id', async (request, response, next) => {
   const review = await Review.findById(request.params.id)
