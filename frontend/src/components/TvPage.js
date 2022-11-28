@@ -19,6 +19,7 @@ import WatchedIconButton from './WatchedIconButton'
 import userShowsService from '../services/userShows'
 import MyShowsIconButton from './MyShowsIconButton'
 import PeopleCarousel from './PeopleCarousel'
+import Reviews from './Reviews/Reviews'
 //this component is the page for a specific tv show, it takes the tv id from the URL
 const TvPage = () => {
   const params = useParams()
@@ -124,27 +125,36 @@ const TvPage = () => {
           creditAttribute={'job'}
         /> */}
 
-        <Divider variant='middle' />
+        <Divider variant="middle" />
         <Box
           sx={{
             display: { md: 'grid', xs: 'block' },
             gridTemplateColumns: '50% 50%',
           }}
         >
-          <CardContent>
-            <PeopleCarousel
-              people={credits.cast}
-              title={'Cast'}
-              creditAttribute={'character'}
-            />
-            <Divider />
+          <Box>
+            <CardContent>
+              <PeopleCarousel
+                people={credits.cast}
+                title={'Cast'}
+                creditAttribute={'character'}
+              />
+            </CardContent>
+            <Divider variant="middle" />
+            <CardContent>
+              <PeopleCarousel
+                people={credits.crew}
+                title={'Crew'}
+                creditAttribute={'job'}
+              />
+            </CardContent>
+            <Divider variant="middle" />
 
-            <PeopleCarousel
-              people={credits.crew}
-              title={'Crew'}
-              creditAttribute={'job'}
-            />
-          </CardContent>
+            <CardContent>
+              <Reviews tv_id={tv.id} seasons={tv.seasons} />
+            </CardContent>
+          </Box>
+
           <CardContent>
             <Typography variant="h6" color="text.primary">
               Episodes

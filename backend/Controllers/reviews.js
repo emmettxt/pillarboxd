@@ -6,7 +6,7 @@ reviewRouter.get('/:id', async (request, response) => {
   response.send(reviews)
 })
 reviewRouter.get('/', async (request, response) => {
-  const reviews = await Review.find(request.query)
+  const reviews = await Review.find(request.query).populate('user', 'username')
   response.send(reviews)
 })
 reviewRouter.post('/', async (request, response, next) => {
@@ -30,7 +30,10 @@ reviewRouter.post('/', async (request, response, next) => {
   }
   user.reviews.push(review)
   user.save()
-  return response.send(review)
+  return response.send({
+    ...review.toJSON(),
+    user: { id: user.id, username: user.username },
+  })
 })
 //updating the content of the review
 reviewRouter.patch('/:id', async (request, response, next) => {
