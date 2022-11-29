@@ -10,7 +10,7 @@ import TvPage from './components/TvPage'
 import Alerts from './components/Alerts'
 import HomePage from './components/HomePage'
 import UserShowsPage from './components/UserShowsPage'
-import PersonPage from './components/PersonPage'
+import PersonPage from './components/PersonPage/PersonPage'
 import SearchResults from './components/SearchResults'
 function App() {
   const dispatch = useDispatch()
