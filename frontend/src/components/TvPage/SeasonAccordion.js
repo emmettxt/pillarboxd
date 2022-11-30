@@ -6,13 +6,13 @@ import {
   useTheme,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
-import tvService from '../services/tv'
+import tvService from '../../services/tv'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box } from '@mui/system'
 import { useDispatch, useSelector } from 'react-redux'
-import { setShow } from '../reducers/userReducer'
-import WatchedIconButton from './WatchedIconButton'
-import userShowsService from '../services/userShows'
+import { setShow } from '../../reducers/userReducer'
+import WatchedIconButton from '../WatchedIconButton'
+import userShowsService from '../../services/userShows'
 import { alpha } from '@mui/system'
 //used for formating the episode release date
 const formatEpisodeDate = (dateAsString) => {

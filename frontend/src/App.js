@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { initializeUser } from './reducers/userReducer'
 import { ThemeProvider } from '@mui/material/styles'
 import linkTheme from './themes/linkTheme'
-import TvPage from './components/TvPage'
+import TvPage from './components/TvPage/TvPage'
 import Alerts from './components/Alerts'
 import HomePage from './components/HomePage'
 import UserShowsPage from './components/UserShowsPage'
@@ -31,10 +31,7 @@ function App() {
               path="/users/:userid/shows"
               element={<UserShowsPage />}
             ></Route>
-            <Route
-              path="/people/:personId"
-              element={<PersonPage />}
-            ></Route>
+            <Route path="/people/:personId" element={<PersonPage />}></Route>
           </Routes>
         </Router>
       </CssBaseline>
