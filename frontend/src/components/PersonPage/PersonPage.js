@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import peopleService from '../../services/people'
-import Crew from './Crew'
+import Credits from './Credits'
 const PersonPage = () => {
   const [person, setPerson] = useState()
   const params = useParams()
@@ -49,7 +49,10 @@ const PersonPage = () => {
         </Box>
         <Divider variant="middle" />
         <CardContent>
-          <Crew crew={person?.combined_credits?.crew} />
+          <Credits
+            crew={person?.combined_credits?.crew}
+            combinedCredits={person?.combined_credits}
+          />
         </CardContent>
       </Card>
     </Container>
