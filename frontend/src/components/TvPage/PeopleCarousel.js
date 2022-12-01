@@ -25,6 +25,7 @@ const Person = ({ person, creditAttribute }) => {
 }
 
 const PeopleCarousel = ({ people, title, creditAttribute }) => {
+  if (people.length<1) return null
   return (
     <Box>
       <Typography variant="h6">{title}</Typography>
