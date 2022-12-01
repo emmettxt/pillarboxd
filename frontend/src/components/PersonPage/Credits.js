@@ -3,11 +3,14 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  CardContent,
   FormControl,
+  FormControlLabel,
   IconButton,
   InputLabel,
   MenuItem,
   Select,
+  Switch,
   Typography,
 } from '@mui/material'
 import { Box } from '@mui/system'
@@ -55,6 +58,7 @@ const Credits = ({ combinedCredits }) => {
   }
   const [jobs, setJobs] = useState([])
   const [credits, setCredits] = useState([])
+  const [showFilms, setShowFilms] = useState(false)
   useEffect(() => {
     const ActingCredits = combinedCredits.cast.map((c, i) => ({
       ...c,
@@ -65,9 +69,9 @@ const Credits = ({ combinedCredits }) => {
       ...c,
       default_order: i,
     }))
-    const credits = [...crewCredits, ...ActingCredits].sort(
-      sort[selecetedSortIndex].sortFunction
-    )
+    const credits = [...crewCredits, ...ActingCredits]
+      .sort(sort[selecetedSortIndex].sortFunction)
+      .filter((c) => (showFilms ? true : c.media_type !== 'movie'))
     setCredits(credits)
     const jobs = Object.entries(
       credits
@@ -77,14 +81,24 @@ const Credits = ({ combinedCredits }) => {
       .map((e) => ({ job: e[0], count: e[1] })) //convert object to array of objects
       .sort((a, b) => b.count - a.count) //sort array by count
     setJobs(jobs)
-  }, [combinedCredits])
+  }, [combinedCredits, showFilms])
   return (
     <Box>
-      <Box sx={{ display: 'flex ' }}>
+      <CardContent sx={{ display: 'flex ', justifyContent:'space-between' }}>
+        <FormControlLabel
+          control={
+            <Switch
+              onChange={() => setShowFilms(!showFilms)}
+              checked={showFilms}
+            />
+          }
+          label="Include Films"
+        />
         <FormControl>
           <InputLabel id="sort-label">Sort by</InputLabel>
 
           <Select
+          variant='outlined'
             labelId="sort-label"
             id="sort-select"
             value={selecetedSortIndex}
@@ -134,7 +148,7 @@ const Credits = ({ combinedCredits }) => {
             ))}
           </Select>
         </FormControl>
-      </Box>
+      </CardContent>
       {jobs.map((j) => (
         <Accordion
           key={j.job}
