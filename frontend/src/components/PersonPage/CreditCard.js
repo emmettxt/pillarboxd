@@ -7,7 +7,11 @@ import {
 } from '@mui/material'
 
 const CreditCard = ({ credit }) => {
+  if (!credit) return null
   const isMovie = credit.media_type === 'movie'
+  const year = (isMovie ? credit.release_date : credit.first_air_date).split(
+    '-'
+  )[0]
   return (
     <Card elevation={6}>
       <CardActionArea
@@ -24,12 +28,12 @@ const CreditCard = ({ credit }) => {
               ? `https://image.tmdb.org/t/p/w185/${credit.poster_path}`
               : null
           }
-          alt={credit.title + ' poster'}
+          alt={isMovie ? credit.title : credit.name}
           sx={{ aspectRatio: '2/3' }}
         />
         <CardContent sx={{ padding: '8px' }}>
           <Typography variant="body1" fontSize="0.8rem">
-            {isMovie ? credit.title : credit.name}
+            {isMovie ? credit.title : credit.name} {year ? `(${year})` : null}
           </Typography>
           <Typography variant="body2" color="text.secondary" fontSize="0.75rem">
             {credit.job === 'Actor' ? credit.character : credit.job}

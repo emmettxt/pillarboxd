@@ -3,23 +3,70 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
   Typography,
 } from '@mui/material'
 import { Box } from '@mui/system'
 import { useState, useEffect } from 'react'
 import { ExpandMore } from '@mui/icons-material'
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 
 const Credits = ({ combinedCredits }) => {
-  // if (crew?.length === 0 && cast?.length === 0) return null
+  const [isSortedDescending, setIsSortedDescending] = useState(true)
+  const descendingMultiplier = isSortedDescending ? 1 : -1
+  const sort = [
+    {
+      title: 'Default',
+      sortFunction: (a, b) =>
+        (a.default_order - b.default_order) * descendingMultiplier,
+    },
+    {
+      title: 'Release Date',
+      sortFunction: (a, b) => {
+        const aDate = Date.parse(a.release_date || a.first_air_date)
+        const bDate = Date.parse(b.release_date || b.first_air_date)
+        return (
+          ((isNaN(bDate) ? 0 : bDate) - (isNaN(aDate) ? 0 : aDate)) *
+          descendingMultiplier
+        )
+      },
+    },
+    {
+      title: 'Title',
+      sortFunction: (a, b) =>
+        (a.title || a.name) < (b.title || b.name)
+          ? descendingMultiplier
+          : -1 * descendingMultiplier,
+    },
+    {
+      title: 'Popularity',
+      sortFunction: (a, b) =>
+        (b.popularity - a.popularity) * descendingMultiplier,
+    },
+  ]
+  const [selecetedSortIndex, setSelectedSort] = useState(0)
+  const handleSortChange = (event) => {
+    setSelectedSort(event.target.value)
+  }
   const [jobs, setJobs] = useState([])
   const [credits, setCredits] = useState([])
   useEffect(() => {
-    const ActingCredits = combinedCredits.cast.map((c) => ({
+    const ActingCredits = combinedCredits.cast.map((c, i) => ({
       ...c,
       job: 'Actor',
+      default_order: i,
     }))
-    const credits = [...combinedCredits.crew, ...ActingCredits].sort(
-      (a, b) => b.popularity - a.popularity
+    const crewCredits = combinedCredits.crew.map((c, i) => ({
+      ...c,
+      default_order: i,
+    }))
+    const credits = [...crewCredits, ...ActingCredits].sort(
+      sort[selecetedSortIndex].sortFunction
     )
     setCredits(credits)
     const jobs = Object.entries(
@@ -33,6 +80,61 @@ const Credits = ({ combinedCredits }) => {
   }, [combinedCredits])
   return (
     <Box>
+      <Box sx={{ display: 'flex ' }}>
+        <FormControl>
+          <InputLabel id="sort-label">Sort by</InputLabel>
+
+          <Select
+            labelId="sort-label"
+            id="sort-select"
+            value={selecetedSortIndex}
+            onChange={handleSortChange}
+            label="Sort by"
+            sx={{ padding: 0 }}
+            startAdornment={
+              <IconButton
+                onClick={() => setIsSortedDescending(!isSortedDescending)}
+              >
+                {isSortedDescending ? (
+                  <ArrowDownwardIcon
+                    sx={{
+                      animation: 'spin 0.2s linear 1',
+                      '@keyframes spin': {
+                        from: {
+                          transform: 'rotate(180deg)',
+                        },
+                        to: {
+                          transform: 'rotate(0deg)',
+                        },
+                      },
+                    }}
+                  ></ArrowDownwardIcon>
+                ) : (
+                  <ArrowUpwardIcon
+                    sx={{
+                      animation: 'spin 0.2s linear 1',
+                      '@keyframes spin': {
+                        from: {
+                          transform: 'rotate(180deg)',
+                        },
+                        to: {
+                          transform: 'rotate(0deg)',
+                        },
+                      },
+                    }}
+                  ></ArrowUpwardIcon>
+                )}
+              </IconButton>
+            }
+          >
+            {sort.map((s, i) => (
+              <MenuItem value={i} key={i}>
+                {s.title}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
       {jobs.map((j) => (
         <Accordion
           key={j.job}
@@ -59,6 +161,7 @@ const Credits = ({ combinedCredits }) => {
             }}
           >
             {credits
+              .sort(sort[selecetedSortIndex].sortFunction)
               .filter((c) => j.job === c.job)
               .map((c) => (
                 <CreditCard
