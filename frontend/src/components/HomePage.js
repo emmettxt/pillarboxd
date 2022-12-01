@@ -12,7 +12,6 @@ import {
   Select,
   MenuItem,
 } from '@mui/material'
-import { Container } from '@mui/system'
 import { useEffect, useState } from 'react'
 // import { Link } from 'react-router-dom'
 import tvService from '../services/tv'
@@ -139,11 +138,7 @@ const Trending = () => {
   )
 }
 const HomePage = () => {
-  return (
-    <Container>
-      <Trending />
-    </Container>
-  )
+  return <Trending />
 }
 
 export default HomePage

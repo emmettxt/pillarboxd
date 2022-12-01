@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { Container } from '@mui/system'
 import {
   Card,
   CardContent,
@@ -127,7 +126,7 @@ const UserShowsPage = () => {
         .map((a) => a[1])
     : []
   return (
-    <Container
+    <Box
       sx={{
         display: 'grid',
         gridTemplateColumns: {
@@ -140,7 +139,7 @@ const UserShowsPage = () => {
       {shows.map((tv) => (
         <ShowCard tv={tv} key={tv.tmdb.id} />
       ))}
-    </Container>
+    </Box>
   )
 }
 export default UserShowsPage

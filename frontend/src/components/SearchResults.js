@@ -8,7 +8,6 @@ import {
 import { List } from '@mui/material'
 import { Avatar } from '@mui/material'
 import { Divider } from '@mui/material'
-import { Container } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import tmdbService from '../services/search'
@@ -61,23 +60,21 @@ const SearchResults = () => {
     tmdbService.searchMulti(query).then((data) => setResults(data))
   }, [query])
   return (
-    <Container>
-      <List
-        sx={{
-          width: '100%',
-          maxWidth: 800,
-          bgcolor: 'background.paper',
-          margin: 'auto',
-        }}
-      >
-        {results.map((resultObject) => (
-          <div key={resultObject.id}>
-            <Divider variant="inset" component="li" />
-            <SearchResult object={resultObject} />
-          </div>
-        ))}
-      </List>
-    </Container>
+    <List
+      sx={{
+        width: '100%',
+        maxWidth: 800,
+        bgcolor: 'background.paper',
+        margin: 'auto',
+      }}
+    >
+      {results.map((resultObject) => (
+        <div key={resultObject.id}>
+          <Divider variant="inset" component="li" />
+          <SearchResult object={resultObject} />
+        </div>
+      ))}
+    </List>
   )
 }
 

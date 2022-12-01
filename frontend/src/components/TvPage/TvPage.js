@@ -69,49 +69,45 @@ const TvPage = () => {
   }
   const [credits, setCredits] = useState({ cast: [], crew: [] })
   return tv ? (
-    <Container>
-      <Card>
-        <Box sx={{ width: '100%', aspectRatio: '16/9', position: 'relative' }}>
-          <img
-            src={`https://image.tmdb.org/t/p/w1280/${tv.backdrop_path}`}
-            style={{
-              width: '100%',
-              height: '100%',
-              // aspectRatio: '16/9',
-              maskImage: `linear-gradient(to bottom, rgba(0,0,0,1)50%, rgba(0,0,0,0))`,
-              maskMode: 'alpha',
-            }}
-          ></img>
-          <CardHeader
-            title={tv.name}
-            subheader={tv.tagline}
-            sx={{ position: 'absolute', bottom: 0 }}
-          />
-        </Box>
-        <CardContent>
-          <Typography variant="body2" color="text.secondary">
-            {tv.overview}
-          </Typography>
+    <Card>
+      <Box sx={{ width: '100%', aspectRatio: '16/9', position: 'relative' }}>
+        <img
+          src={`https://image.tmdb.org/t/p/w1280/${tv.backdrop_path}`}
+          style={{
+            width: '100%',
+            height: '100%',
+            // aspectRatio: '16/9',
+            maskImage: `linear-gradient(to bottom, rgba(0,0,0,1)50%, rgba(0,0,0,0))`,
+            maskMode: 'alpha',
+          }}
+        ></img>
+        <CardHeader
+          title={tv.name}
+          subheader={tv.tagline}
+          sx={{ position: 'absolute', bottom: 0 }}
+        />
+      </Box>
+      <CardContent>
+        <Typography variant="body2" color="text.secondary">
+          {tv.overview}
+        </Typography>
 
-          <Box sx={{ display: 'flex' }}>
-            <WatchedIconButton
-              handleClick={
-                isEntireShowInUserWatchlist
-                  ? handleRemoveShowFromWatchlist
-                  : handleAddShowToWatchlist
-              }
-              isInWatchlist={isEntireShowInUserWatchlist}
-            />
-            <MyShowsIconButton tv={tv} />
-            <Box sx={{ marginRight: 0, marginLeft: 'auto' }}>
-              <ImdbRating
-                rating={imdbRating}
-                imdbId={tv.external_ids.imdb_id}
-              />
-            </Box>
+        <Box sx={{ display: 'flex' }}>
+          <WatchedIconButton
+            handleClick={
+              isEntireShowInUserWatchlist
+                ? handleRemoveShowFromWatchlist
+                : handleAddShowToWatchlist
+            }
+            isInWatchlist={isEntireShowInUserWatchlist}
+          />
+          <MyShowsIconButton tv={tv} />
+          <Box sx={{ marginRight: 0, marginLeft: 'auto' }}>
+            <ImdbRating rating={imdbRating} imdbId={tv.external_ids.imdb_id} />
           </Box>
-        </CardContent>
-        {/* <Divider />
+        </Box>
+      </CardContent>
+      {/* <Divider />
         <PeopleCarousel
           people={credits.cast}
           title={'Cast'}
@@ -125,52 +121,51 @@ const TvPage = () => {
           creditAttribute={'job'}
         /> */}
 
-        <Divider variant="middle" />
-        <Box
-          sx={{
-            display: { md: 'grid', xs: 'block' },
-            gridTemplateColumns: '50% 50%',
-          }}
-        >
-          <Box>
-            <CardContent>
-              <PeopleCarousel
-                people={credits.cast}
-                title={'Cast'}
-                creditAttribute={'character'}
-              />
-            </CardContent>
-            <Divider variant="middle" />
-            <CardContent>
-              <PeopleCarousel
-                people={credits.crew}
-                title={'Crew'}
-                creditAttribute={'job'}
-              />
-            </CardContent>
-            <Divider variant="middle" />
-
-            <CardContent>
-              <Reviews tv_id={tv.id} seasons={tv.seasons} />
-            </CardContent>
-          </Box>
+      <Divider variant="middle" />
+      <Box
+        sx={{
+          display: { md: 'grid', xs: 'block' },
+          gridTemplateColumns: '50% 50%',
+        }}
+      >
+        <Box>
+          <CardContent>
+            <PeopleCarousel
+              people={credits.cast}
+              title={'Cast'}
+              creditAttribute={'character'}
+            />
+          </CardContent>
+          <Divider variant="middle" />
+          <CardContent>
+            <PeopleCarousel
+              people={credits.crew}
+              title={'Crew'}
+              creditAttribute={'job'}
+            />
+          </CardContent>
+          <Divider variant="middle" />
 
           <CardContent>
-            <Typography variant="h6" color="text.primary">
-              Episodes
-            </Typography>
-            {tv.seasons.map((season) => (
-              <SeasonAccordion
-                tvId={tv.id}
-                seasonNumber={season.season_number}
-                key={season.id}
-                season={season}
-              />
-            ))}
+            <Reviews tv_id={tv.id} seasons={tv.seasons} />
           </CardContent>
         </Box>
-      </Card>
-    </Container>
+
+        <CardContent>
+          <Typography variant="h6" color="text.primary">
+            Episodes
+          </Typography>
+          {tv.seasons.map((season) => (
+            <SeasonAccordion
+              tvId={tv.id}
+              seasonNumber={season.season_number}
+              key={season.id}
+              season={season}
+            />
+          ))}
+        </CardContent>
+      </Box>
+    </Card>
   ) : null
 }
 

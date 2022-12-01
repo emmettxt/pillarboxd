@@ -12,6 +12,7 @@ import HomePage from './components/HomePage'
 import UserShowsPage from './components/UserShowsPage'
 import PersonPage from './components/PersonPage/PersonPage'
 import SearchResults from './components/SearchResults'
+import { Container } from '@mui/system'
 function App() {
   const dispatch = useDispatch()
   useEffect(() => {
@@ -23,16 +24,18 @@ function App() {
         <Router>
           <Navbar />
           <Alerts />
-          <Routes>
-            <Route path="/" element={<HomePage />}></Route>
-            <Route path="/search/:query" element={<SearchResults />}></Route>
-            <Route path="/tv/:id" element={<TvPage />}></Route>
-            <Route
-              path="/users/:userid/shows"
-              element={<UserShowsPage />}
-            ></Route>
-            <Route path="/people/:personId" element={<PersonPage />}></Route>
-          </Routes>
+          <Container sx={{ padding: { xs: 0 } }}>
+            <Routes>
+              <Route path="/" element={<HomePage />}></Route>
+              <Route path="/search/:query" element={<SearchResults />}></Route>
+              <Route path="/tv/:id" element={<TvPage />}></Route>
+              <Route
+                path="/users/:userid/shows"
+                element={<UserShowsPage />}
+              ></Route>
+              <Route path="/people/:personId" element={<PersonPage />}></Route>
+            </Routes>
+          </Container>
         </Router>
       </CssBaseline>
     </ThemeProvider>
