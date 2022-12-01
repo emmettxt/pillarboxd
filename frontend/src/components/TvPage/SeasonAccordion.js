@@ -3,118 +3,16 @@ import {
   AccordionDetails,
   AccordionSummary,
   Typography,
-  useTheme,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import tvService from '../../services/tv'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Box } from '@mui/system'
 import { useDispatch, useSelector } from 'react-redux'
 import { setShow } from '../../reducers/userReducer'
 import WatchedIconButton from '../WatchedIconButton'
 import userShowsService from '../../services/userShows'
-import { alpha } from '@mui/system'
-//used for formating the episode release date
-const formatEpisodeDate = (dateAsString) => {
-  const date = new Date(dateAsString)
-  if (!dateAsString || date.toString === 'Invalid Date') {
-    return null
-  }
-  const options = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }
-  return date.toLocaleDateString(undefined, options)
-}
-const EpisodeAccordion = ({ tvId, episode }) => {
-  const user = useSelector((state) => state.user)
+import EpisodeAccordion from './EpisodeAccordion'
 
-  const isEpisodeInWatchlist = user?.shows?.[tvId]?.episodes.some(
-    (w) =>
-      w.season_number === episode.season_number &&
-      w.episode_number === episode.episode_number
-  )
-  const dispatch = useDispatch()
-  const handleWatchlist = async (event) => {
-    event.stopPropagation()
-
-    if (isEpisodeInWatchlist) {
-      await userShowsService.removeEpisode(
-        user,
-        tvId,
-        episode.season_number,
-        episode.episode_number
-      )
-      const updatedShow = {
-        ...user.shows[tvId],
-        episodes: user.shows[tvId].episodes.filter(
-          (e) =>
-            e.episode_number !== episode.episode_number ||
-            e.season_number !== episode.season_number
-        ),
-      }
-      dispatch(setShow({ tvId, updatedShow }))
-    } else {
-      const updatedShow = await userShowsService.addEpisode(
-        user,
-        tvId,
-        episode.season_number,
-        episode.episode_number
-      )
-      dispatch(setShow({ tvId, updatedShow }))
-    }
-  }
-  const theme = useTheme()
-  return (
-    <Accordion
-      key={`${tvId}.${episode.season_number}.${episode.episode_number}`}
-      sx={{ background: alpha(theme.palette.background.paper, 0.7) }}
-      TransitionProps={{ mountOnEnter: true }}
-    >
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1a-content"
-        id="panel1a-header"
-      >
-        {/* <MoreTimeIcon
-          onClick={handleWatchlist}
-          color={isEpisodeInWatchlist ? 'success' : 'primary'}
-          sx={{ paddingRight: '5px' }}
-        ></MoreTimeIcon> */}
-        <WatchedIconButton
-          handleClick={handleWatchlist}
-          isInWatchlist={isEpisodeInWatchlist}
-        />
-
-        <Typography varient="subtitle1">
-          {`${episode.episode_number}: ${episode.name}`}{' '}
-        </Typography>
-        <Typography
-          variant="subtitle2"
-          sx={{ marginLeft: 'auto', textAlign: 'end' }}
-        >
-          {formatEpisodeDate(episode.air_date)}
-        </Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Box sx={{ display: 'flex', flexWrap: { xs: 'wrap', sm: 'nowrap' } }}>
-          {episode.still_path ? (
-            <img
-              width="150"
-              height="84"
-              loading="lazy"
-              src={`https://image.tmdb.org/t/p/w300${episode.still_path}`}
-              alt={episode.name}
-            ></img>
-          ) : null}
-          <Typography sx={{ flexShrink: 2 }}>{episode.overview}</Typography>
-        </Box>
-      </AccordionDetails>
-    </Accordion>
-  )
-}
 //this is the details for each season accordion, is seperate component as data is only loaded when expanded
 const SeasonAccordionDetails = ({ tvId, season }) => {
   //tmdb gives episode details with call for get season
