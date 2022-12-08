@@ -2,8 +2,9 @@ import { Divider, ListItem, ListItemText, Typography, Box } from '@mui/material'
 import DeleteReviewButton from './DeleteReviewButton'
 import ReactShowMoreText from 'react-show-more-text'
 import { useSelector } from 'react-redux'
+import EditReviewModal from './EditReviewModal'
 
-const ReviewListItem = ({review, handleRemoveReview}) => {
+const ReviewListItem = ({ review, handleRemoveReview }) => {
   const user = useSelector((s) => s.user)
 
   return (
@@ -26,10 +27,13 @@ const ReviewListItem = ({review, handleRemoveReview}) => {
                   : null}
               </Typography>
               {user && review.user.id === user.id ? (
-                <DeleteReviewButton
-                  reviewId={review.id}
-                  handleRemoveReview={() => handleRemoveReview(review.id)}
-                />
+                <>
+                  <DeleteReviewButton
+                    reviewId={review.id}
+                    handleRemoveReview={() => handleRemoveReview(review.id)}
+                  />
+                  <EditReviewModal review={review} />
+                </>
               ) : null}
             </Box>
           </Box>
