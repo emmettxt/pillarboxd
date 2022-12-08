@@ -1,11 +1,9 @@
 import {
-  Divider,
   FormControl,
   IconButton,
   InputLabel,
   List,
   ListItem,
-  ListItemText,
   ListSubheader,
   MenuItem,
   Select,
@@ -15,10 +13,8 @@ import ClearIcon from '@mui/icons-material/Clear'
 import { Box } from '@mui/system'
 import { useEffect, useState } from 'react'
 import reviewService from '../../services/reviews'
-import ReactShowMoreText from 'react-show-more-text'
 import AddReviewModal from './AddReviewModal'
-import DeleteReviewButton from './DeleteReviewButton'
-import { useSelector } from 'react-redux'
+import ReviewListItem from './ReviewListItem'
 const Reviews = ({ tv_id, seasons }) => {
   const [episodeNumber, setEpisodeNumber] = useState('')
   const [selectedSeason, setSelectedSeason] = useState('')
@@ -50,7 +46,6 @@ const Reviews = ({ tv_id, seasons }) => {
   const handleRemoveReview = (reviewId) => {
     setReviews(reviews.filter((r) => r.id !== reviewId))
   }
-  const user = useSelector((s) => s.user)
   return (
     <Box>
       <Box display={'flex'} justifyContent={'space-between'}>
@@ -139,55 +134,11 @@ const Reviews = ({ tv_id, seasons }) => {
       <List>
         {reviews?.length ? (
           reviews.map((review) => (
-            <div key={review.id}>
-              <ListItem key={review.id}>
-                <ListItemText
-                  disableTypography
-                  primary={
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <Typography>{review.user.username}</Typography>
-                      <Box sx={{ display: 'flex' }}>
-                        <Typography
-                          color={'text.secondary'}
-                          fontSize={'0.875rem'}
-                        >
-                          {review.season_number
-                            ? `Season ${review.season_number}`
-                            : null}
-                          {review.episode_number
-                            ? ` - Episode ${review.episode_number}`
-                            : null}
-                        </Typography>
-                        {user && review.user.id === user.id ? (
-                          <DeleteReviewButton
-                            reviewId={review.id}
-                            handleRemoveReview={() =>
-                              handleRemoveReview(review.id)
-                            }
-                          />
-                        ) : null}
-                      </Box>
-                    </Box>
-                  }
-                  secondary={
-                    <Typography
-                      color={'text.secondary'}
-                      variant="body2"
-                      sx={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
-                      component={ReactShowMoreText}
-                    >
-                      {review.content}
-                    </Typography>
-                  }
-                />
-              </ListItem>
-              <Divider variant="middle" key={`${review.id}-divider`} />
-            </div>
+            <ReviewListItem
+              review={review}
+              handleRemoveReview={handleRemoveReview}
+              key={review.id}
+            />
           ))
         ) : (
           <ListItem>
