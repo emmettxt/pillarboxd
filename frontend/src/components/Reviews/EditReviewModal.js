@@ -13,6 +13,8 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
+import reviewService from '../../services/reviews'
+import { useSelector } from 'react-redux'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -24,7 +26,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 }
-const EditReviewModal = ({ review }) => {
+const EditReviewModal = ({ review, handleUpdateReview }) => {
   const [open, setOpen] = useState(false)
   const handleClose = () => {
     setOpen(false)
@@ -32,9 +34,15 @@ const EditReviewModal = ({ review }) => {
   const handleOpen = () => {
     setOpen(true)
   }
-  const handleUpdateReview = async(event) => {
+  const user = useSelector((s) => s.user)
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    
+    const updatedReview = await reviewService.updateReview(
+      user,
+      review.id,
+      event.target.content.value
+    )
+    handleUpdateReview(updatedReview)
   }
   return (
     <>
@@ -46,7 +54,7 @@ const EditReviewModal = ({ review }) => {
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <Typography variant="h6">Edit Review</Typography>
-          <form onSubmit={handleUpdateReview}>
+          <form onSubmit={handleSubmit}>
             <Box
               sx={{
                 display: 'grid',
@@ -61,7 +69,6 @@ const EditReviewModal = ({ review }) => {
                   id="reviews-season"
                   value={review.season_number}
                   label="Season"
-                  
                 >
                   <MenuItem value={review.season_number}>
                     {`Season ${review.season_number}`}
@@ -94,7 +101,7 @@ const EditReviewModal = ({ review }) => {
               multiline
               minRows={4}
               // value={review.content}
-              
+
               defaultValue={review.content}
             />
             <Button type="submit">Update Review</Button>

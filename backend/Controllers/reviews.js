@@ -2,8 +2,9 @@ const reviewRouter = require('express').Router()
 const Review = require('../models/review')
 
 reviewRouter.get('/:id', async (request, response) => {
-  const reviews = await Review.findById(request.params.id)
-  response.send(reviews)
+  const review = await Review.findById(request.params.id)
+  if (!review) return response.sendStatus(404)
+  response.send(review)
 })
 reviewRouter.get('/', async (request, response) => {
   const reviews = await Review.find(request.query).populate('user', 'username')
@@ -53,10 +54,13 @@ reviewRouter.delete('/:id', async (request, response) => {
 })
 //updating the content of the review
 reviewRouter.patch('/:id', async (request, response, next) => {
-  const review = await Review.findById(request.params.id)
-  if (!review) return response.status(404)
+  const review = await Review.findById(request.params.id).populate(
+    'user',
+    'username'
+  )
+  if (!review) return response.sendStatus(404)
 
-  if (!request.user || request.user.id !== review.user.toString()) {
+  if (!request.user || request.user.id !== review.user.id.toString()) {
     return response.sendStatus(401)
   }
   if (!request.body.content && !request.body.rating) {
@@ -78,5 +82,4 @@ reviewRouter.patch('/:id', async (request, response, next) => {
   }
   return response.json(review)
 })
-
 module.exports = reviewRouter

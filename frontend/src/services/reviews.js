@@ -37,5 +37,11 @@ const removeReview = async (user, reviewId) => {
   const authconfig = getAuthConfig(user)
   await axios.delete(`${baseUrl}/${reviewId}`, authconfig)
 }
-const reviewService = { getReviews, addReview, removeReview }
+const updateReview = async (user, reviewId, content) => {
+  const authconfig = getAuthConfig(user)
+  const body = { content }
+  const response = await axios.patch(`${baseUrl}/${reviewId}`, body, authconfig)
+  return response.data
+}
+const reviewService = { getReviews, addReview, removeReview, updateReview }
 export default reviewService

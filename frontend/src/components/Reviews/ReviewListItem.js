@@ -4,7 +4,7 @@ import ReactShowMoreText from 'react-show-more-text'
 import { useSelector } from 'react-redux'
 import EditReviewModal from './EditReviewModal'
 
-const ReviewListItem = ({ review, handleRemoveReview }) => {
+const ReviewListItem = ({ review, handleRemoveReview,handleUpdateReview }) => {
   const user = useSelector((s) => s.user)
 
   return (
@@ -32,7 +32,10 @@ const ReviewListItem = ({ review, handleRemoveReview }) => {
                     reviewId={review.id}
                     handleRemoveReview={() => handleRemoveReview(review.id)}
                   />
-                  <EditReviewModal review={review} />
+                  <EditReviewModal
+                    review={review}
+                    handleUpdateReview={handleUpdateReview}
+                  />
                 </>
               ) : null}
             </Box>

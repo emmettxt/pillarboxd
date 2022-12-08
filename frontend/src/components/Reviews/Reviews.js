@@ -46,6 +46,13 @@ const Reviews = ({ tv_id, seasons }) => {
   const handleRemoveReview = (reviewId) => {
     setReviews(reviews.filter((r) => r.id !== reviewId))
   }
+  const handleUpdateReview = (updatedReview) => {
+    setReviews(
+      reviews.map((review) =>
+        review.id === updatedReview.id ? updatedReview : review
+      )
+    )
+  }
   return (
     <Box>
       <Box display={'flex'} justifyContent={'space-between'}>
@@ -137,6 +144,7 @@ const Reviews = ({ tv_id, seasons }) => {
             <ReviewListItem
               review={review}
               handleRemoveReview={handleRemoveReview}
+              handleUpdateReview={handleUpdateReview}
               key={review.id}
             />
           ))
