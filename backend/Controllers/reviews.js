@@ -60,9 +60,11 @@ reviewRouter.patch('/:id', async (request, response, next) => {
   )
   if (!review) return response.sendStatus(404)
 
-  if (!request.user || request.user.id !== review.user.id.toString()) {
-    return response.sendStatus(401)
-  }
+  if (!request.user) return response.sendStatus(401)
+
+  if (request.user.id !== review.user.id.toString())
+    return response.sendStatus(403)
+
   if (!request.body.content && !request.body.rating) {
     return response
       .status(403)
@@ -81,5 +83,31 @@ reviewRouter.patch('/:id', async (request, response, next) => {
     return next(error)
   }
   return response.json(review)
+})
+reviewRouter.post('/:id/moderation', async (request, response, next) => {
+  if (!request.user) return response.sendStatus(401)
+  if (!request.user.isModerator) return response.sendStatus(403)
+  const { id } = request.params
+  const review = await Review.findById(id).populate('user', 'username')
+  if (!review) return response.sendStatus(404)
+  if (review.moderation?.isModerated)
+    return response
+      .status(403)
+      .json({ message: 'This review has already been moderated' })
+  if (!request.body.moderator_comment)
+    return response
+      .status(400)
+      .json({ message: 'modertor_comment required in request body' })
+  review.moderation = {
+    isModerated: true,
+    moderator_comment: request.body.moderator_comment,
+    date_moderated: new Date(),
+  }
+  try {
+    review.save()
+  } catch (error) {
+    next(error)
+  }
+  response.json(review)
 })
 module.exports = reviewRouter

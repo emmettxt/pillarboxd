@@ -29,6 +29,7 @@ const userSchema = new mongoose.Schema({
     required: 'Email address is required',
     match: [/^.+@(?:[\w-]+\.)+\w+$/, 'Please fill a valid email address'],
   },
+  isModerator: { type: Boolean, default: false },
   active: Boolean,
   name: String,
   passwordHash: String,

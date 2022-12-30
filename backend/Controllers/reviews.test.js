@@ -276,13 +276,32 @@ describe('two user exist in DB', () => {
       expect({
         ...reviewAfter.toJSON(),
         rating: null,
-        content:null,
+        content: null,
         date_modified: null,
       }).toEqual({
         ...reviewBefore.toJSON(),
         rating: null,
-        content:null,
+        content: null,
         date_modified: null,
+      })
+    })
+
+    describe('moderating a review', () => {
+      test('moderting unmoderted review', async () => {
+        const reviewBefore = await Review.findOne({})
+        const user = await usersShowsTestHelper.getTestUserIsModerator()
+        const token = await usersShowsTestHelper.getValidTokenForUser(user)
+        const body = { moderator_comment: 'i dont like this review' }
+        const response = await api
+          .post(`/api/reviews/${reviewBefore.id}/moderation`)
+          .send(body)
+          .set('Authorization', `bearer ${token}`)
+          .expect('Content-Type', /application\/json/)
+          .expect(200)
+
+        expect(response.body.moderation.moderator_comment).toEqual(
+          body.moderator_comment
+        )
       })
     })
   })

@@ -27,6 +27,11 @@ const reviewShema = new mongoose.Schema({
     min: [0, 'Must be at least 0 got {VALUE}'],
     max: [5, 'Cannot be greater than 5 got {VALUE}'],
   },
+  moderation: {
+    isModerated: { type: Boolean, default: false },
+    moderator_comment: String,
+    date_moderated: Date,
+  },
 })
 reviewShema.index(
   { user: 1, tv_id: 1, season_number: 1, episode_number: 1 },

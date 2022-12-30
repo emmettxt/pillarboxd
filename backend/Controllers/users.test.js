@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
-const app = require('../app')
+const app = require('../app/app')
 const api = supertest(app)
 const User = require('../models/user')
 // const helper = require('./test_helper')
@@ -15,7 +15,7 @@ beforeEach(async () => {
   await user.save()
 })
 
-describe.only('there is one user in the DB', () => {
+describe('there is one user in the DB', () => {
   describe('getting users works', () => {
     test('getting all users works', async () => {
       const response = await api.get('/api/users').expect(200)
@@ -35,7 +35,11 @@ describe.only('there is one user in the DB', () => {
       expect(response.body.error).toEqual('username must be unique')
     })
     test('works with valid details', async () => {
-      const userToAdd = { username: 'testUser2', password: 'password',email:'test1@test.test' }
+      const userToAdd = {
+        username: 'testUser2',
+        password: 'password',
+        email: 'test1@test.test',
+      }
       const response = await api.post('/api/users').send(userToAdd).expect(200)
       expect(response.body.username).toEqual(userToAdd.username)
     })

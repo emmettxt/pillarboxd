@@ -21,6 +21,7 @@ const initialUserWithoutShow = {
   username: 'test_user1',
   password: 'password',
   email: 'test1@test.test',
+  isModerator: true,
 }
 const initialUsers = [initialUserWithShow, initialUserWithoutShow]
 
@@ -64,6 +65,10 @@ const getValidTokenForUser = async (user) => {
   const token = await jwt.sign(userForToken, process.env.SECRET)
   return token
 }
+const getTestUserIsModerator = async () => {
+  const user = await User.findOne({ isModerator: true })
+  return user
+}
 const userWatchListTestHelper = {
   intializeUsers,
   initialUsers,
@@ -72,5 +77,6 @@ const userWatchListTestHelper = {
   getTestUserWithShow,
   getValidTokenForUser,
   initialUserWithShow,
+  getTestUserIsModerator,
 }
 module.exports = userWatchListTestHelper
