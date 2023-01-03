@@ -30,7 +30,7 @@ const DeleteReviewButton = ({ reviewId, handleRemoveReview }) => {
   return (
     <div>
       <Tooltip title="Delete Reivew">
-        <IconButton sx={{ padding: 0 }} onClick={handleOpen}>
+        <IconButton  onClick={handleOpen}>
           <DeleteForeverOutlined />
         </IconButton>
       </Tooltip>

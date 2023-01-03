@@ -3,57 +3,85 @@ import DeleteReviewButton from './DeleteReviewButton'
 import ReactShowMoreText from 'react-show-more-text'
 import { useSelector } from 'react-redux'
 import EditReviewModal from './EditReviewModal'
+import ReportReviewModal from './ReportReviewModal'
 
-const ReviewListItem = ({ review, handleRemoveReview,handleUpdateReview }) => {
+const ReviewListItem = ({ review, handleRemoveReview, handleUpdateReview }) => {
   const user = useSelector((s) => s.user)
 
   return (
-    <ListItem>
-      <ListItemText
-        disableTypography
-        primary={
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Typography>{review.user.username}</Typography>
-            <Box sx={{ display: 'flex' }}>
-              <Typography color={'text.secondary'} fontSize={'0.875rem'}>
-                {review.season_number ? `Season ${review.season_number}` : null}
-                {review.episode_number
-                  ? ` - Episode ${review.episode_number}`
-                  : null}
-              </Typography>
-              {user && review.user.id === user.id ? (
-                <>
-                  <DeleteReviewButton
-                    reviewId={review.id}
-                    handleRemoveReview={() => handleRemoveReview(review.id)}
-                  />
-                  <EditReviewModal
-                    review={review}
-                    handleUpdateReview={handleUpdateReview}
-                  />
-                </>
-              ) : null}
+    <>
+      <ListItem>
+        <ListItemText
+          disableTypography
+          primary={
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Typography>{review.user.username}</Typography>
+              <Box sx={{ display: 'flex' }}>
+                <Typography color={'text.secondary'} fontSize={'0.875rem'}>
+                  {review.season_number
+                    ? `Season ${review.season_number}`
+                    : null}
+                  {review.episode_number
+                    ? ` - Episode ${review.episode_number}`
+                    : null}
+                </Typography>
+                {user && review.user.id === user.id ? (
+                  <>
+                    <DeleteReviewButton
+                      reviewId={review.id}
+                      handleRemoveReview={() => handleRemoveReview(review.id)}
+                    />
+                    <EditReviewModal
+                      review={review}
+                      handleUpdateReview={handleUpdateReview}
+                    />
+                    <ReportReviewModal
+                      review={review}
+                      handleUpdateReview={handleUpdateReview}
+                    />
+                  </>
+                ) : null}
+              </Box>
             </Box>
-          </Box>
-        }
-        secondary={
-          <Typography
-            color={'text.secondary'}
-            variant="body2"
-            sx={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
-            component={ReactShowMoreText}
-          >
-            {review.content}
-          </Typography>
-        }
-      />
+          }
+          secondary={
+            review?.moderation.isModerated ? (
+              <>
+                <Typography
+                  color={'text.secondary'}
+                  variant="caption"
+                  paragraph
+                >
+                  This review has been moderated for the following reason:
+                </Typography>
+                <Typography
+                  color={'text.secondary'}
+                  variant="body2"
+                  sx={{ fontStyle: 'italic' }}
+                >
+                  {review.moderation.moderator_comment}
+                </Typography>
+              </>
+            ) : (
+              <Typography
+                color={'text.secondary'}
+                variant="body2"
+                sx={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
+                component={ReactShowMoreText}
+              >
+                {review.content}
+              </Typography>
+            )
+          }
+        />
+      </ListItem>
       <Divider variant="middle" key={`${review.id}-divider`} />
-    </ListItem>
+    </>
   )
 }
 export default ReviewListItem

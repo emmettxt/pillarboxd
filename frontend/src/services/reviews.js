@@ -43,5 +43,21 @@ const updateReview = async (user, reviewId, content) => {
   const response = await axios.patch(`${baseUrl}/${reviewId}`, body, authconfig)
   return response.data
 }
-const reviewService = { getReviews, addReview, removeReview, updateReview }
+const moderateReview = async (user, reviewId, moderator_comment) => {
+  const authconfig = getAuthConfig(user)
+  const body = { moderator_comment }
+  const response = await axios.post(
+    `${baseUrl}/${reviewId}/moderation`,
+    body,
+    authconfig
+  )
+  return response.data
+}
+const reviewService = {
+  getReviews,
+  addReview,
+  removeReview,
+  updateReview,
+  moderateReview,
+}
 export default reviewService
