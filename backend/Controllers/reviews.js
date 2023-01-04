@@ -12,6 +12,10 @@ reviewRouter.get('/', async (request, response) => {
 })
 reviewRouter.post('/', async (request, response, next) => {
   if (!request.user) return response.sendStatus(401)
+  if (!request.body.content && !request.body.rating)
+    return response
+      .status(422)
+      .json({ message: 'request must conatin either content or rating' })
   const user = request.user
   const review = new Review({
     ...request.body,
