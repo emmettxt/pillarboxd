@@ -13,7 +13,7 @@ const reviewShema = new mongoose.Schema({
   tv_id: { type: Number, index: true, required: true },
   date_added: { type: Date, required: true },
   date_modified: { type: Date, required: true },
-  content: { type: String, required: true },
+  content: String,
   season_number: Number,
   episode_number: {
     type: Number,
