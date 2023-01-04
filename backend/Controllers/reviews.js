@@ -11,7 +11,8 @@ reviewRouter.get('/', async (request, response) => {
   response.send(reviews)
 })
 reviewRouter.post('/', async (request, response, next) => {
-  if (!request.user) return response.sendStatus(401)
+  if (!request.user)
+    return response.status(401).json({ message: 'user not authorized' })
   if (!request.body.content && !request.body.rating)
     return response
       .status(422)
