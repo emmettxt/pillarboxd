@@ -20,13 +20,15 @@ const addReview = async (
   tv_id,
   season_number,
   episode_number,
-  content
+  content,
+  rating
 ) => {
   const data = {
     tv_id,
     ...((season_number || season_number === 0) && { season_number }),
     ...(episode_number && { episode_number }),
     content,
+    rating,
   }
   const authconfig = getAuthConfig(user)
 
@@ -37,9 +39,10 @@ const removeReview = async (user, reviewId) => {
   const authconfig = getAuthConfig(user)
   await axios.delete(`${baseUrl}/${reviewId}`, authconfig)
 }
-const updateReview = async (user, reviewId, content) => {
+const updateReview = async (user, reviewId, content, rating) => {
   const authconfig = getAuthConfig(user)
-  const body = { content }
+  const body = { content, rating }
+  console.log({ body })
   const response = await axios.patch(`${baseUrl}/${reviewId}`, body, authconfig)
   return response.data
 }

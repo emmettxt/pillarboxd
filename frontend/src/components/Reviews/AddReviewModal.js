@@ -7,6 +7,7 @@ import {
   InputLabel,
   MenuItem,
   Modal,
+  Rating,
   Select,
   TextField,
   Tooltip,
@@ -45,6 +46,7 @@ const AddReviewModal = ({
     setEpisodeNumber(initialEpisode)
     setSeasonNumber(initalSeasonNumber)
     setSelectedSeason(initalSeason)
+    setStarRating(null)
     setOpen(true)
   }
   const [episodeNumber, setEpisodeNumber] = useState(initialEpisode)
@@ -75,18 +77,26 @@ const AddReviewModal = ({
     setAlertTimeoutid(
       setTimeout(() => {
         setAlertMessage(null)
-      }, 5000)
+      }, 2500)
     )
   }
   const handleAddReview = async (event) => {
     event.preventDefault()
+    if (
+      event.target.content.value === '' &&
+      event.target.starRating.value === ''
+    ) {
+      setAlert('your review must contain a rating or content', 'error')
+      return
+    }
     try {
       const newReview = await reviewService.addReview(
         user,
         tv_id,
         seasonNumber,
         episodeNumber,
-        event.target.content.value
+        event.target.content.value,
+        event.target.starRating.value
       )
       handleNewReview(newReview)
       setAlert('Review Added', 'success')
@@ -99,10 +109,11 @@ const AddReviewModal = ({
       ) {
         setAlert('It appears you have already reviewed this.', 'error')
       } else {
-        setAlert(error.response?.data, 'error')
+        setAlert(error.response?.data?.message, 'error')
       }
     }
   }
+  const [starRating, setStarRating] = useState(null)
   return (
     <Box>
       <Tooltip title="Add a Review" disableFocusListener>
@@ -196,11 +207,27 @@ const AddReviewModal = ({
               label="Your Review"
               type="text"
               fullWidth
-              required
+              // required
               margin="normal"
               multiline
               minRows={4}
             />
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Typography component="legend">Rating</Typography>
+              <Rating
+                name="starRating"
+                precision={0.5}
+                value={starRating}
+                onChange={(event, newValue) => setStarRating(newValue)}
+              />
+              <Typography>{starRating}</Typography>
+              <Button
+                onClick={() => setStarRating(null)}
+                sx={{ display: starRating ? 'block' : 'none', padding: 0 }}
+              >
+                clear
+              </Button>
+            </Box>
             <Button type="submit">Submit Review</Button>
           </form>
         </Box>

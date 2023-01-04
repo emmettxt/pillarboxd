@@ -10,6 +10,7 @@ import {
   MenuItem,
   TextField,
   Button,
+  Rating,
 } from '@mui/material'
 import { useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
@@ -37,13 +38,17 @@ const EditReviewModal = ({ review, handleUpdateReview }) => {
   const user = useSelector((s) => s.user)
   const handleSubmit = async (event) => {
     event.preventDefault()
+    console.log({ starRating, value: event.target.starRating.value })
     const updatedReview = await reviewService.updateReview(
       user,
       review.id,
-      event.target.content.value
+      event.target.content.value,
+      event.target.starRating.value
     )
     handleUpdateReview(updatedReview)
   }
+  const [starRating, setStarRating] = useState(review.rating)
+
   return (
     <>
       <Tooltip title="Edit Review">
@@ -96,7 +101,6 @@ const EditReviewModal = ({ review, handleUpdateReview }) => {
               label="Your Review"
               type="text"
               fullWidth
-              required
               margin="normal"
               multiline
               minRows={4}
@@ -104,6 +108,22 @@ const EditReviewModal = ({ review, handleUpdateReview }) => {
 
               defaultValue={review.content}
             />
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Typography component="legend">Rating</Typography>
+              <Rating
+                name="starRating"
+                precision={0.5}
+                value={starRating}
+                onChange={(event, newValue) => setStarRating(newValue)}
+              />
+              <Typography>{starRating}</Typography>
+              <Button
+                onClick={() => setStarRating(null)}
+                sx={{ display: starRating ? 'block' : 'none', padding: 0 }}
+              >
+                clear
+              </Button>
+            </Box>
             <Button type="submit">Update Review</Button>
           </form>
         </Box>

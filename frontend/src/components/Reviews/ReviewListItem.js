@@ -1,4 +1,11 @@
-import { Divider, ListItem, ListItemText, Typography, Box } from '@mui/material'
+import {
+  Divider,
+  ListItem,
+  ListItemText,
+  Typography,
+  Box,
+  Rating,
+} from '@mui/material'
 import DeleteReviewButton from './DeleteReviewButton'
 import ReactShowMoreText from 'react-show-more-text'
 import { useSelector } from 'react-redux'
@@ -18,34 +25,56 @@ const ReviewListItem = ({ review, handleRemoveReview, handleUpdateReview }) => {
               sx={{
                 display: 'flex',
                 justifyContent: 'space-between',
+                flexWrap: true,
               }}
             >
               <Typography>{review.user.username}</Typography>
-              <Box sx={{ display: 'flex' }}>
-                <Typography color={'text.secondary'} fontSize={'0.875rem'}>
-                  {review.season_number
-                    ? `Season ${review.season_number}`
-                    : null}
-                  {review.episode_number
-                    ? ` - Episode ${review.episode_number}`
-                    : null}
-                </Typography>
-                {user && review.user.id === user.id ? (
-                  <>
-                    <DeleteReviewButton
-                      reviewId={review.id}
-                      handleRemoveReview={() => handleRemoveReview(review.id)}
-                    />
-                    <EditReviewModal
-                      review={review}
-                      handleUpdateReview={handleUpdateReview}
-                    />
-                    <ReportReviewModal
-                      review={review}
-                      handleUpdateReview={handleUpdateReview}
-                    />
-                  </>
-                ) : null}
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'end',
+                }}
+              >
+                <Box sx={{ display: 'flex', alignContent: 'center' }}>
+                  <Typography
+                    color={'text.secondary'}
+                    fontSize={'0.875rem'}
+                    component="div"
+                    sx={{ margin: 'auto' }}
+                  >
+                    {review.season_number
+                      ? `Season ${review.season_number}`
+                      : null}
+                    {review.episode_number
+                      ? ` - Episode ${review.episode_number}`
+                      : null}
+                  </Typography>
+
+                  {user && review.user.id === user.id ? (
+                    <>
+                      <DeleteReviewButton
+                        reviewId={review.id}
+                        handleRemoveReview={() => handleRemoveReview(review.id)}
+                      />
+                      <EditReviewModal
+                        review={review}
+                        handleUpdateReview={handleUpdateReview}
+                      />
+                      <ReportReviewModal
+                        review={review}
+                        handleUpdateReview={handleUpdateReview}
+                      />
+                    </>
+                  ) : null}
+                </Box>
+                <Rating
+                  value={review.rating}
+                  readOnly
+                  precision={0.5}
+                  max={Math.ceil(review.rating)}
+                  size="small"
+                />
               </Box>
             </Box>
           }
@@ -68,14 +97,16 @@ const ReviewListItem = ({ review, handleRemoveReview, handleUpdateReview }) => {
                 </Typography>
               </>
             ) : (
-              <Typography
-                color={'text.secondary'}
-                variant="body2"
-                sx={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
-                component={ReactShowMoreText}
-              >
-                {review.content}
-              </Typography>
+              <>
+                <Typography
+                  color={'text.secondary'}
+                  variant="body2"
+                  sx={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
+                  component={ReactShowMoreText}
+                >
+                  {review.content}
+                </Typography>
+              </>
             )
           }
         />
