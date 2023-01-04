@@ -59,12 +59,4 @@ userRouter.post('/', async (request, response, next) => {
     }
   }
 })
-// const generateValidationEmail = async (savedUser) => {
-//   const randomString = cryptoRandomString({ length: 128, type: 'url-safe' })
-//   const validationString = new ValidationString({
-//     user: savedUser.id,
-//     string: randomString,
-//   })
-//   await validationString.save()
-// }
 module.exports = userRouter
