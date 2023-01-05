@@ -1,6 +1,6 @@
 import { Box, SvgIcon, Typography, IconButton } from '@mui/material'
-import { ReactComponent as ImdbStar } from '../assest/imdbStar.svg'
-import { ReactComponent as ImdbLogo } from '../assest/IMDB_Logo.svg'
+import { ReactComponent as ImdbStar } from '../assets/imdbStar.svg'
+import { ReactComponent as ImdbLogo } from '../assets/IMDB_Logo.svg'
 
 const ImdbRating = ({ rating, imdbId }) => {
   return rating ? (
