@@ -30,9 +30,4 @@ app.use(middleware.errorHandler)
 
 app.use('/*', express.static('build'))
 
-// if (process.env.NODE_ENV === 'test') {
-//   const testingRouter = require('./controllers/testing')
-//   app.use('/api/testing', testingRouter)
-// }
-
 module.exports = app
