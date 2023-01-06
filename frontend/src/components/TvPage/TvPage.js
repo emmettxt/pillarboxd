@@ -1,5 +1,4 @@
 import {
-  Container,
   Typography,
   Card,
   CardContent,
@@ -106,20 +105,6 @@ const TvPage = () => {
           </Box>
         </Box>
       </CardContent>
-      {/* <Divider />
-        <PeopleCarousel
-          people={credits.cast}
-          title={'Cast'}
-          creditAttribute={'character'}
-        />
-        <Divider />
-
-        <PeopleCarousel
-          people={credits.crew}
-          title={'Crew'}
-          creditAttribute={'job'}
-        /> */}
-
       <Divider variant="middle" />
       <Box
         sx={{

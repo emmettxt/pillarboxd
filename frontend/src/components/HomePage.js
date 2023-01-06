@@ -100,17 +100,6 @@ const Trending = () => {
           }
         ></MobileStepper>
       </Box>
-      {/* <Box
-        sx={{
-          display: 'grid',
-          // gridAutoFlow: 'column',
-          gridTemplateColumns: {
-            xs: 'repeat(2,1fr)',
-            sm: 'repeat(4,1fr)',
-          },
-          //'repeat(auto-fit, minmax(185px,1fr))',
-        }}
-      > */}
       <AutoPlaySwipeableViews
         axis="x"
         index={activeStep}
