@@ -53,7 +53,6 @@ const TvPage = () => {
     const episodeCountInUsersShows = user.shows[tv.id].episodes.filter(
       (s) => s.season_number !== 0
     ).length
-    console.log({ episodeCountInUsersShows, episodeCount })
     return episodeCount === episodeCountInUsersShows
   }
   const isEntireShowInUserWatchlist = checkAllEpisodesInUsersShow()

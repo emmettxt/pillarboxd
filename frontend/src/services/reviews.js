@@ -42,7 +42,6 @@ const removeReview = async (user, reviewId) => {
 const updateReview = async (user, reviewId, content, rating) => {
   const authconfig = getAuthConfig(user)
   const body = { content, rating }
-  console.log({ body })
   const response = await axios.patch(`${baseUrl}/${reviewId}`, body, authconfig)
   return response.data
 }

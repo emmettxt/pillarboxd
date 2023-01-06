@@ -5,7 +5,6 @@ const getAuthConfig = (user) => {
     const auth = {
       headers: { Authorization: `bearer ${user.token}` },
     }
-    console.log(auth)
     return auth
   }
   return null

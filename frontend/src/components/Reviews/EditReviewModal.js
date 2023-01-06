@@ -38,7 +38,6 @@ const EditReviewModal = ({ review, handleUpdateReview }) => {
   const user = useSelector((s) => s.user)
   const handleSubmit = async (event) => {
     event.preventDefault()
-    console.log({ starRating, value: event.target.starRating.value })
     const updatedReview = await reviewService.updateReview(
       user,
       review.id,

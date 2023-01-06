@@ -29,7 +29,6 @@ const Login = () => {
       username: event.target.username.value,
       password: event.target.password.value,
     }
-    console.log('login call with credentials: ', credentials)
     try {
       await dispatch(loginUser(credentials))
     } catch (error) {

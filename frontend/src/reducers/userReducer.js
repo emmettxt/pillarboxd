@@ -34,7 +34,6 @@ export const initializeUser = () => {
 export const loginUser = (credentials) => {
   return async (dispatch) => {
     const user = await loginService.login(credentials)
-    console.log('logged in user:', user)
     window.localStorage.setItem('loggedInPillarboxdUser', JSON.stringify(user))
     dispatch(setUser(user))
   }
