@@ -61,11 +61,13 @@ const ReviewListItem = ({ review, handleRemoveReview, handleUpdateReview }) => {
                         review={review}
                         handleUpdateReview={handleUpdateReview}
                       />
-                      <ReportReviewModal
-                        review={review}
-                        handleUpdateReview={handleUpdateReview}
-                      />
                     </>
+                  ) : null}
+                  {user ? (
+                    <ReportReviewModal
+                      review={review}
+                      handleUpdateReview={handleUpdateReview}
+                    />
                   ) : null}
                 </Box>
                 <Rating
