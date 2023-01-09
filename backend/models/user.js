@@ -33,8 +33,10 @@ const userSchema = new mongoose.Schema({
   active: Boolean,
   name: String,
   passwordHash: String,
-  shows: { type: Map, of: showSchema },
-  reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
+  shows: { type: Map, of: showSchema, default: {} },
+  reviews: [
+    { type: mongoose.Schema.Types.ObjectId, ref: 'Review'},
+  ],
 })
 
 userSchema.set('toJSON', {
