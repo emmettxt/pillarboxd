@@ -1,0 +1,25 @@
+###
+GET http://localhost:3001/api/reviews/637d47dbf451a3c453b88ccc
+
+###
+POST http://localhost:3001/api/reviews
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYzMzU3MDYyODExY2JmYzQ3NGI3NDViZSIsImlhdCI6MTY2NjI2ODUyN30.bczpLIt4LNSTbwGFAEoPWxm2WpimDiejQsRONFDsdkI
+
+{
+  "tv_id":1398,
+  "content":"Another Great Episode" ,
+  "episode_number":2,
+  "season_number":1
+}
+
+###
+PATCH http://localhost:3001/api/reviews/637d47dbf451a3c453b88ccc?moderate=true
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYzMzU3MDYyODExY2JmYzQ3NGI3NDViZSIsImlhdCI6MTY2NjI2ODUyN30.bczpLIt4LNSTbwGFAEoPWxm2WpimDiejQsRONFDsdkI
+
+ 
+###
+DELETE http://localhost:3001/api/reviews/6384cdce3e8005324da52243
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYzMzU3MDYyODExY2JmYzQ3NGI3NDViZSIsImlhdCI6MTY2NjI2ODUyN30.bczpLIt4LNSTbwGFAEoPWxm2WpimDiejQsRONFDsdkI
+

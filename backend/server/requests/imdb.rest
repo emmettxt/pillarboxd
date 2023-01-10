@@ -1,0 +1,5 @@
+###
+GET http://localhost:3001/api/imdb/tt13443470
+
+###
+GET https://www.imdb.com/title/tt13443470/

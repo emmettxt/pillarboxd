@@ -1,0 +1,12 @@
+
+GET http://localhost:3000/tmdb/search/tv?query=simp
+
+###
+GET http://localhost:3001/api/tmdb/tv/1398?append_to_response=season/0,season/1,season/2
+
+###
+GET http://localhost:3000/tmdb/tv/1398
+
+
+###
+GET http://localhost:3001/api/tmdb/tv/1398/season?append_to_response=1,2,3,4,5,6
