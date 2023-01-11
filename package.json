@@ -10,7 +10,7 @@
     "start:dev": "concurrently --kill-others 'npm run start:server' -k 'npm run start:client'",
     "start:server": "cross-env NODE_ENV=production nodemon server/index.js",
     "start:client": "cd ./client && npm start",
-    "build:ui": "cd ./client && npm run build",
+    "build": "cd ./client && npm run build",
     "postinstall": "cd ./client && npm install --force && npm run build"
   },
   "author": "Emmet Moore",
