@@ -6,7 +6,8 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --verbose --forceExit --runInBand",
     "test:watch": "cross-env NODE_ENV=test jest --verbose --forceExit --watch",
-    "start": "concurrently --kill-others 'npm run start:server' -k 'npm run start:client'",
+    "start": "node server/index.js",
+    "start:dev": "concurrently --kill-others 'npm run start:server' -k 'npm run start:client'",
     "start:server": "cross-env NODE_ENV=production nodemon server/index.js",
     "start:client": "cd ./client && npm start",
     "build:ui": "cd ./client && npm run build",
