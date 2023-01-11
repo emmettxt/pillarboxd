@@ -1,7 +1,7 @@
 {
-  "name": "backend",
+  "name": "pillarboxd",
   "version": "1.0.0",
-  "description": "express backend for Pillarboxd app",
+  "description": "MERN stack web app for reviewing TV shows",
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --verbose --forceExit --runInBand",
