@@ -13,12 +13,11 @@ import {
   MenuItem,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
-// import { Link } from 'react-router-dom'
 import tvService from '../services/tv'
-import SwipeableViews from 'react-swipeable-views'
-import { autoPlay } from 'react-swipeable-views-utils'
+import SwipeableViews from 'react-swipeable-views-react-18-fix'
+// import { autoPlay } from 'react-swipeable-views-utils'
 
-const AutoPlaySwipeableViews = autoPlay(SwipeableViews)
+const AutoPlaySwipeableViews = SwipeableViews
 
 const ShowCard = ({ tv }) => {
   return (
