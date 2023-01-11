@@ -14,10 +14,10 @@ import {
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import tvService from '../services/tv'
-import SwipeableViews from 'react-swipeable-views-react-18-fix'
+// import SwipeableViews from 'react-swipeable-views-react-18-fix'
 // import { autoPlay } from 'react-swipeable-views-utils'
 
-const AutoPlaySwipeableViews = SwipeableViews
+// const AutoPlaySwipeableViews = SwipeableViews
 
 const ShowCard = ({ tv }) => {
   return (
@@ -99,7 +99,7 @@ const Trending = () => {
           }
         ></MobileStepper>
       </Box>
-      <AutoPlaySwipeableViews
+      {/* <AutoPlaySwipeableViews
         axis="x"
         index={activeStep}
         onChange={handleStepChange}
@@ -121,12 +121,12 @@ const Trending = () => {
             ))}
           </Box>
         ))}
-      </AutoPlaySwipeableViews>
+      </AutoPlaySwipeableViews> */}
     </Box>
   )
 }
 const HomePage = () => {
-  return <Trending />
+  // return <Trending />
 }
 
 export default HomePage
