@@ -15,7 +15,7 @@ mongoose.connect(config.MONGODB_URI)
 
 app.use(cors())
 app.use(express.json())
-app.use(express.static('build'))
+app.use(express.static('client/build'))
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
 app.use(middleware.userExtractor)
@@ -28,6 +28,6 @@ app.use('/api/tmdb', tmdbProxyRouter)
 app.use('/api/imdb', imdbRouter)
 app.use(middleware.errorHandler)
 
-app.use('/*', express.static('build'))
+app.use('/*', express.static('client/build'))
 
 module.exports = app

@@ -11,6 +11,8 @@ import {
 import { Box } from '@mui/system'
 import { useState } from 'react'
 
+import { useSelector } from 'react-redux'
+import reviewService from '../../services/reviews'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -22,13 +24,15 @@ const style = {
   boxShadow: 24,
   p: 4,
 }
-import { useSelector } from 'react-redux'
-import reviewService from '../../services/reviews'
 const ReportReviewModal = ({ review, handleUpdateReview }) => {
   const user = useSelector((state) => state.user)
+  const [open, setOpen] = useState(false)
+
+  const [alertMessage, setAlertMessage] = useState('')
+  const [alertSeverity, setAlertSeverity] = useState('success')
+  const [alertTimeoutId, setAlertTimeoutid] = useState()
   if (!user.isModerator) return null
 
-  const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const handleModerate = async (event) => {
@@ -46,10 +50,6 @@ const ReportReviewModal = ({ review, handleUpdateReview }) => {
       setAlert(error.response.data, 'error')
     }
   }
-
-  const [alertMessage, setAlertMessage] = useState('')
-  const [alertSeverity, setAlertSeverity] = useState('success')
-  const [alertTimeoutId, setAlertTimeoutid] = useState()
   const setAlert = (message, severity) => {
     clearTimeout(alertTimeoutId)
     setAlertMessage(message)
