@@ -11,6 +11,7 @@
     "start:server": "cross-env NODE_ENV=production nodemon server/index.js",
     "start:client": "cd ./client && npm start",
     "build": "cd ./client && npm run build",
+    "build:azure": "cd ./client && npm run build",
     "postinstall": "cd ./client && npm install"
   },
   "author": "Emmet Moore",
